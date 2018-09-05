@@ -16,8 +16,6 @@ public abstract class GameObject {
 
     protected float speed;
 
-    protected float rotationSpeed;
-
     //size
     protected float width;
     protected float height;
@@ -46,6 +44,8 @@ public abstract class GameObject {
         this.x=x;
         this.y=y;
     }
+
+    public abstract void setShape();
 
     public abstract void update(float dt);
 

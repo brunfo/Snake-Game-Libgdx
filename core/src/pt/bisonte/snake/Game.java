@@ -30,7 +30,7 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(0.25f, 0.75f, 0.25f, 0.5f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		gameStateManager.update(Gdx.graphics.getDeltaTime());
@@ -40,6 +40,5 @@ public class Game extends ApplicationAdapter {
 	
 	@Override
 	public void dispose () {
-
 	}
 }
