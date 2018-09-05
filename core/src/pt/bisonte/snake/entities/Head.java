@@ -4,24 +4,22 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import pt.bisonte.snake.Game;
 
-import java.util.List;
-
 public class Head extends GameObject {
 
-    private List<Tail> tails;
 
     private boolean rotateLeft;
     private boolean rotateRight;
 
-    private float moveTimer;
-    private float moveTime; //move every x second
 
-    public Head(List<Tail> tails) {
-        this.tails = tails;
+    private float pX; //previous X
+    private float pY; //previous Y
+
+    public Head() {
 
         //start position
         x = Game.WIDTH / 2;
         y = Game.HEIGHT / 2;
+
 
         //initialize shape
         shapeX = new float[4];
@@ -33,9 +31,10 @@ public class Head extends GameObject {
         //inital speed
         speed = 10;
 
-        //Timers
-        moveTimer = 0;
-        moveTime = 0.5f;
+        //set previous position for the first tail
+        pX = x;
+        pY = y - speed;
+
     }
 
     public void setRotateLeft(boolean rotateLeft) {
@@ -46,7 +45,17 @@ public class Head extends GameObject {
         this.rotateRight = rotateRight;
     }
 
-    public void setMoveTime(float moveTime) { this.moveTime = moveTime; }
+    public float getPX() {
+        return pX;
+    }
+
+    public float getPY() {
+        return pY;
+    }
+
+    public float getDirection() {
+        return radians;
+    }
 
     @Override
     public void setPosition(float x, float y) {
@@ -77,25 +86,18 @@ public class Head extends GameObject {
         if (rotateRight)
             radians -= (float) Math.PI / 2;
 
-        moveTimer += dt;
 
-        //only moves every time defined by moveTime
-        if (moveTimer > moveTime) {
+        //calculate direction
+        dx = Math.round(Math.cos(radians)) * speed;
+        dy = Math.round(Math.sin(radians)) * speed;
 
-            moveTimer = 0; //reset timer
+        //set new position
+        x += dx;
+        y += dy;
 
-            //calculate direction
-            dx = Math.round(Math.cos(radians)) * speed;
-            dy = Math.round(Math.sin(radians)) * speed;
-
-            //set new position
-            x += dx;
-            y += dy;
-        }
 
         //set shape for player
         setShape();
-
     }
 
     @Override
