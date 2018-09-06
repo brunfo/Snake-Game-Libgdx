@@ -40,12 +40,17 @@ public abstract class GameObject {
         return shapeY;
     }
 
+    /**
+     * Sets coordinates for center of a body part.
+     * @param x - width coordinate
+     * @param y - eight coordinate
+     */
     public void setPosition(float x, float y){
         this.x=x;
         this.y=y;
     }
 
-    public abstract void setShape();
+    //public abstract void setShape();
 
     public abstract void update(float dt);
 

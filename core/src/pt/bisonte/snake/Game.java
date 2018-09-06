@@ -12,6 +12,8 @@ public class Game extends ApplicationAdapter {
 
 	public static int WIDTH;
 	public static int HEIGHT;
+	public static int CELL_WIDTH;
+
 	public static OrthographicCamera camera;
 
 	public GameStateManager gameStateManager;
@@ -21,6 +23,8 @@ public class Game extends ApplicationAdapter {
 	public void create () {
 	WIDTH = Gdx.graphics.getWidth();
 	HEIGHT = Gdx.graphics.getHeight();
+	CELL_WIDTH=20;
+
 	camera = new OrthographicCamera(WIDTH, HEIGHT);
 	camera.translate(WIDTH /2, HEIGHT/2);
 	camera.update();
