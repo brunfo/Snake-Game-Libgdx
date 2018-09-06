@@ -66,18 +66,22 @@ public class Body extends GameObject {
 
     /**
      * Signs head to rotate left. Receives a boolean parameter from Game input keys.
+     * It only sets turn if turning is not set already
      * @param rotateLeft
      */
     public void setRotateLeft(boolean rotateLeft) {
-        this.rotateLeft = rotateLeft;
+        if (!this.rotateLeft && !rotateRight)
+            this.rotateLeft = rotateLeft;
     }
 
     /**
      * Signs head to rotate right. Receives a boolean parameter from Game input keys.
+     * It only sets turn if turning is not set already
      * @param rotateRight
      */
     public void setRotateRight(boolean rotateRight) {
-        this.rotateRight = rotateRight;
+        if(!this.rotateRight && !rotateLeft)
+            this.rotateRight = rotateRight;
     }
 
     /**
@@ -144,10 +148,14 @@ public class Body extends GameObject {
     public void update(float dt) {
         if(isHead()) {
             //rotating
-            if (rotateLeft)
+            if (rotateLeft) {
                 radians += (float) Math.PI / 2;
-            if (rotateRight)
+                rotateLeft=false;
+            }
+            if (rotateRight) {
                 radians -= (float) Math.PI / 2;
+                rotateRight = false;
+            }
 
 
             //calculate direction

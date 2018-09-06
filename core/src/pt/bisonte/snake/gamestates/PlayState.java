@@ -91,8 +91,8 @@ public class PlayState extends GameState {
 
     @Override
     public void handleInput() {
-        head.setRotateLeft(Gdx.input.isKeyPressed(Input.Keys.LEFT));
-        head.setRotateRight(Gdx.input.isKeyPressed(Input.Keys.RIGHT));
+        head.setRotateLeft(Gdx.input.isKeyJustPressed(Input.Keys.LEFT));
+        head.setRotateRight(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT));
     }
 
     @Override
