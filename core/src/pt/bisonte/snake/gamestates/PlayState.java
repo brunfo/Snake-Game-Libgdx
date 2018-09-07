@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import pt.bisonte.snake.Game;
-import pt.bisonte.snake.entities.Body;
+import pt.bisonte.snake.entities.Head;
 import pt.bisonte.snake.entities.Fruit;
 import pt.bisonte.snake.entities.Tail;
 import pt.bisonte.snake.managers.GameStateManager;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public class PlayState extends GameState {
 
-    private Body head;
+    private Head head;
     private List<Tail> body;
     private Fruit fruit;
 
@@ -23,7 +23,6 @@ public class PlayState extends GameState {
 
     private float moveTimer;
     private float moveTime; //move every x second
-
 
     public PlayState(GameStateManager gameStateManager) {
         super(gameStateManager);
@@ -37,7 +36,18 @@ public class PlayState extends GameState {
         moveTimer = 0;
         moveTime = 0.5f;
 
-        head = new Body();
+        head = new Head();
+
+        resetBody();
+
+
+    }
+
+    private void resetBody(){
+        head.setPosition(
+                (MathUtils.random(Game.WIDTH/ Game.CELL_WIDTH))* Game.CELL_WIDTH-10,
+                (MathUtils.random(Game.HEIGHT/Game.CELL_WIDTH))* Game.CELL_WIDTH-10
+        );
 
         body = new ArrayList<Tail>();
 
@@ -53,6 +63,8 @@ public class PlayState extends GameState {
         //get user input
         handleInput();
 
+        checkCollision();
+
         //create fruit
         if (fruit == null) {
             float x;
@@ -61,8 +73,8 @@ public class PlayState extends GameState {
             do {
                 //TODO the fruit should not spawn in the same position as any object
                 // first get the position random
-                x = MathUtils.random(Game.WIDTH);
-                y = MathUtils.random(Game.HEIGHT);
+                x = MathUtils.random(Game.WIDTH/Game.CELL_WIDTH)*Game.CELL_WIDTH-10;
+                y = MathUtils.random(Game.HEIGHT/Game.CELL_WIDTH)*Game.CELL_WIDTH-10;
 
                 //
                 float dx = x - head.getX();
@@ -89,6 +101,10 @@ public class PlayState extends GameState {
 
             //update body position
             if (body.size() != 0) {
+                //if player has eat a fruit add a body part
+                if(head.hasEat())
+                    body.add(new Tail(0,0));
+                //sets new position of body parts
                 for (int i = body.size() - 1; i >= 0; i--) {
                     if (i == 0)
                         body.get(i).setPosition(head.getX(), head.getY());
@@ -97,9 +113,30 @@ public class PlayState extends GameState {
                 }
             }
 
+            if(head.isDead())
+                resetBody();
+
             //update head
             head.update(dt);
         }
+    }
+
+    /**
+     * Check collision point to point intersection
+     */
+    private void checkCollision(){
+        //head to tail
+        for (Tail bodyPart: body){
+            head.hit(bodyPart.contains(head.getX(), head.getY()));
+        }
+
+        //head to fruit
+        if(fruit!=null) {
+            head.eat(fruit.contains(head.getX(), head.getY()), fruit.getScore());
+            if (fruit.shouldRemove())
+                fruit = null;
+        }
+
     }
 
     /**
@@ -108,10 +145,10 @@ public class PlayState extends GameState {
     private void drawMatrix(){
         sr.setColor(0,0,1,1);
         sr.begin(ShapeRenderer.ShapeType.Line);
-        for (int i=0; i<Game.WIDTH;i+=20){
+        for (int i=0; i<Game.WIDTH+1;i+=20){
             sr.line(i,Game.HEIGHT, i, 0);
         }
-        for (int i=0; i<Game.HEIGHT;i+=20){
+        for (int i=0; i<Game.HEIGHT+1;i+=20){
             sr.line(Game.WIDTH,i, 0,i);
         }
     }

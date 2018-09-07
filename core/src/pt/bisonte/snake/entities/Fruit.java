@@ -24,6 +24,11 @@ public class Fruit extends GameObject {
 
     public boolean shouldRemove(){ return remove;}
 
+    public boolean contains(float x, float y){
+        remove=super.contains(x,y);
+        return remove;
+    }
+
     public int getScore(){ return score;}
 
     @Override

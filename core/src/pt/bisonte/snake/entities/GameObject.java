@@ -52,6 +52,19 @@ public abstract class GameObject {
 
     //public abstract void setShape();
 
+    /**
+     * Return true if coordinates x and y are the same,
+     * @param x - point x
+     * @param y- point y
+     * @return true or false
+     */
+    public boolean contains(float x, float y){
+        if(getX()==x && getY()==y) {
+              return true;
+        }
+        return false;
+    }
+
     public abstract void update(float dt);
 
     public abstract void draw(ShapeRenderer sr);

@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import pt.bisonte.snake.Game;
 
-public class Body extends GameObject {
+public class Head extends GameObject {
 
 
     private boolean rotateLeft;
@@ -13,16 +13,15 @@ public class Body extends GameObject {
     private float width;
     private float height;
 
+    private boolean dead;
+    private boolean eat;
+
+    private double score;
+
     /**
      * Constructor for the head.
      */
-    public Body() {
-
-
-        //set random player start position
-        setPosition(
-                (MathUtils.random(Game.WIDTH/ Game.CELL_WIDTH))* Game.CELL_WIDTH-10,
-                (MathUtils.random(Game.HEIGHT/Game.CELL_WIDTH))* Game.CELL_WIDTH-10);
+    public Head() {
 
         //set width and height
         width=height=Game.CELL_WIDTH;
@@ -56,12 +55,38 @@ public class Body extends GameObject {
             this.rotateRight = rotateRight;
     }
 
+    /**
+     * Set player dead
+     * @param b
+     */
+    public void hit(boolean b){
+        dead = b;
+    }
+
+    public boolean isDead(){ return dead;}
+
+    /**
+     * If true the player sums score
+     * @param b true or false
+     * @param score int score
+     */
+    public void eat(boolean b, int score){
+        if(b) {
+            this.score += score;
+            eat = true;
+        }
+    }
+
+    public boolean hasEat(){ return eat;}
+
      /**
      * Updates the head, positioning, facing angle, etc.
      * @param dt - game timer
      */
     @Override
     public void update(float dt) {
+
+            eat = false;
 
             //rotating
             if (rotateLeft) {
@@ -100,8 +125,8 @@ public class Body extends GameObject {
         sr.rect (x-width/2,y-height/2,width, height);
         sr.end();
 
-            sr.setColor(0,2,0,1);
-            sr.begin(ShapeRenderer.ShapeType.Line);
+            sr.setColor(0,0.1f,0,1);
+            sr.begin(ShapeRenderer.ShapeType.Filled);
             sr.rect (x-width/2+4,y-height/2+4,width-8, height-8);
             sr.end();
 
