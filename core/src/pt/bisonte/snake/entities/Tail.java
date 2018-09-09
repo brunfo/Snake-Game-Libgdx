@@ -8,7 +8,7 @@ public class Tail extends GameObject {
     public Tail(float x, float y){
 
         //set width and height
-        width=height=Game.CELL_WIDTH;
+        width=height=Game.GRID_CELL;
 
         setPosition(x,y);
     }

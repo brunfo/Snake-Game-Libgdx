@@ -2,6 +2,7 @@ package pt.bisonte.snake.managers;
 
 import pt.bisonte.snake.gamestates.*;
 
+
 public class GameStateManager {
 
     private GameState gameState;
@@ -10,7 +11,15 @@ public class GameStateManager {
         MENU, PLAY, HIGHSCORES, GAMEOVER
     };
 
+    public enum OptionKeys{
+        SNAKE, PLAYER;
+    }
+
+
+    public static OptionKeys optionKeys;
+
     public GameStateManager(){
+        optionKeys= OptionKeys.PLAYER;
         setState(State.PLAY);
     }
 

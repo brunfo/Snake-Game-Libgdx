@@ -3,15 +3,19 @@ package pt.bisonte.snake.gamestates;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import pt.bisonte.snake.Game;
 import pt.bisonte.snake.entities.Head;
 import pt.bisonte.snake.entities.Fruit;
 import pt.bisonte.snake.entities.Tail;
+import pt.bisonte.snake.level.Board;
 import pt.bisonte.snake.managers.GameStateManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class PlayState extends GameState {
 
@@ -24,6 +28,8 @@ public class PlayState extends GameState {
     private float moveTimer;
     private float moveTime; //move every x second
 
+    private Board board;
+
     public PlayState(GameStateManager gameStateManager) {
         super(gameStateManager);
     }
@@ -32,30 +38,32 @@ public class PlayState extends GameState {
     public void init() {
         sr = new ShapeRenderer();
 
+        board=new Board(15,15);
         //Timers
         moveTimer = 0;
-        moveTime = 0.5f;
+        moveTime = 0.25f;
 
         head = new Head();
 
         resetBody();
 
-
     }
 
     private void resetBody(){
+        head.reset();
         head.setPosition(
-                (MathUtils.random(Game.WIDTH/ Game.CELL_WIDTH))* Game.CELL_WIDTH-10,
-                (MathUtils.random(Game.HEIGHT/Game.CELL_WIDTH))* Game.CELL_WIDTH-10
+                (board.startX()*Game.GRID_CELL),
+                (board.startY()*Game.GRID_CELL)
         );
+
 
         body = new ArrayList<Tail>();
 
         //add 2 body
-        body.add(new Tail(head.getX(), head.getY()-Game.CELL_WIDTH));
-        body.add(new Tail(body.get(0).getX(), body.get(0).getY()-Game.CELL_WIDTH));
-        body.add(new Tail(body.get(1).getX(), body.get(1).getY()-Game.CELL_WIDTH));
-        body.add(new Tail(body.get(2).getX(), body.get(2).getY()-Game.CELL_WIDTH));
+        body.add(new Tail(head.getX(), head.getY()));
+        body.add(new Tail(body.get(0).getX(), body.get(0).getY()-Game.GRID_CELL));
+        body.add(new Tail(body.get(1).getX(), body.get(1).getY()-Game.GRID_CELL));
+        body.add(new Tail(body.get(2).getX(), body.get(2).getY()-Game.GRID_CELL));
     }
 
     @Override
@@ -63,26 +71,31 @@ public class PlayState extends GameState {
         //get user input
         handleInput();
 
-        checkCollision();
+
 
         //create fruit
         if (fruit == null) {
             float x;
             float y;
-            float distance;
+            boolean contains;
             do {
                 //TODO the fruit should not spawn in the same position as any object
                 // first get the position random
-                x = MathUtils.random(Game.WIDTH/Game.CELL_WIDTH)*Game.CELL_WIDTH-10;
-                y = MathUtils.random(Game.HEIGHT/Game.CELL_WIDTH)*Game.CELL_WIDTH-10;
+                x = board.getX()+
+                        MathUtils.random(board.getColumns()-1)* Game.GRID_CELL+
+                        Game.GRID_CELL *0.5f;
+                y = board.getY()+
+                        MathUtils.random(board.getRows()-1)*Game.GRID_CELL +
+                        Game.GRID_CELL * 0.5f;
 
-                //
-                float dx = x - head.getX();
-                float dy = y - head.getY();
+                // check if space is free
+                contains = head.contains(x,y);
 
-                // calculates distance
-                distance = (float) Math.sqrt(dx * dx + dy * dy);
-            } while (distance < 10);
+                for (Tail bodyPart: body){
+                    contains=bodyPart.contains(x, y);
+                }
+
+            } while (contains);
 
             fruit = new Fruit(x, y);
         }
@@ -92,12 +105,15 @@ public class PlayState extends GameState {
                 fruit=null;
         }
 
+
+
         moveTimer += dt;
 
         //only moves every time defined by moveTime
         if (moveTimer > moveTime) {
-
             moveTimer = 0; //reset timer
+
+            checkCollision();
 
             //update body position
             if (body.size() != 0) {
@@ -127,9 +143,10 @@ public class PlayState extends GameState {
     private void checkCollision(){
         //head to tail
         for (Tail bodyPart: body){
-            head.hit(bodyPart.contains(head.getX(), head.getY()));
-        }
+            if(bodyPart.contains(head.getX(), head.getY()))
+                head.hit();
 
+    }
         //head to fruit
         if(fruit!=null) {
             head.eat(fruit.contains(head.getX(), head.getY()), fruit.getScore());
@@ -139,43 +156,41 @@ public class PlayState extends GameState {
 
     }
 
-    /**
-     * Auxiliary develop matrix
-     */
-    private void drawMatrix(){
-        sr.setColor(0,0,1,1);
-        sr.begin(ShapeRenderer.ShapeType.Line);
-        for (int i=0; i<Game.WIDTH+1;i+=20){
-            sr.line(i,Game.HEIGHT, i, 0);
-        }
-        for (int i=0; i<Game.HEIGHT+1;i+=20){
-            sr.line(Game.WIDTH,i, 0,i);
-        }
-    }
-
     @Override
     public void draw() {
         sr.setProjectionMatrix(Game.camera.combined);
 
-        drawMatrix();
 
-        sr.end();
+        board.draw(sr);
+
         head.draw(sr);
 
         //draw body
         for (Tail bodyPart : body) {
             bodyPart.draw(sr);
         }
-
         if(fruit!=null)
             fruit.draw(sr);
+
 
     }
 
     @Override
     public void handleInput() {
-        head.setRotateLeft(Gdx.input.isKeyJustPressed(Input.Keys.LEFT));
-        head.setRotateRight(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT));
+        //user preferences input keys
+        switch(Game.gameStateManager.optionKeys) {
+            case SNAKE://snake perspective
+                head.setRotateLeft(Gdx.input.isKeyJustPressed(Input.Keys.LEFT));
+                head.setRotateRight(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT));
+                break;
+            case PLAYER: //player perspective
+                head.setLeft(Gdx.input.isKeyJustPressed(Input.Keys.LEFT));
+                head.setRight(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT));
+                head.setUp(Gdx.input.isKeyJustPressed(Input.Keys.UP));
+                head.setDown(Gdx.input.isKeyJustPressed(Input.Keys.DOWN));
+                break;
+        }
+
     }
 
     @Override

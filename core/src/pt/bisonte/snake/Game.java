@@ -4,26 +4,25 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import pt.bisonte.snake.level.Board;
 import pt.bisonte.snake.managers.GameStateManager;
 
 public class Game extends ApplicationAdapter {
 
 	public static int WIDTH;
 	public static int HEIGHT;
-	public static int CELL_WIDTH;
+	public static int GRID_CELL;
 
 	public static OrthographicCamera camera;
 
-	public GameStateManager gameStateManager;
+	public static GameStateManager gameStateManager;
 
 
 	@Override
 	public void create () {
 	WIDTH = Gdx.graphics.getWidth();
 	HEIGHT = Gdx.graphics.getHeight();
-	CELL_WIDTH=20;
+	GRID_CELL =15;
 
 	camera = new OrthographicCamera(WIDTH, HEIGHT);
 	camera.translate(WIDTH /2, HEIGHT/2);

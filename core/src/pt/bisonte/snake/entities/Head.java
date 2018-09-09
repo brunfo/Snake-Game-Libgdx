@@ -1,10 +1,15 @@
 package pt.bisonte.snake.entities;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import pt.bisonte.snake.Game;
 
 public class Head extends GameObject {
+
+     private enum Facing{
+        UP, DOWN, LEFT, RIGHT
+    };
+
+    private Facing facing;
 
 
     private boolean rotateLeft;
@@ -24,15 +29,23 @@ public class Head extends GameObject {
     public Head() {
 
         //set width and height
-        width=height=Game.CELL_WIDTH;
-
-        //initial orientation
-        radians = (float) Math.PI / 2;
+        width=height=Game.GRID_CELL;
 
         //initial speed
         speed = width;
 
+        reset();
+    }
 
+    /**
+     * Reset previous orientation
+     */
+    public void reset(){
+        //initial orientation
+        radians = (float) Math.PI / 2;
+        facing=Facing.UP;
+
+        dead=false;
     }
 
     /**
@@ -40,9 +53,12 @@ public class Head extends GameObject {
      * It only sets turn if turning is not set already
      * @param rotateLeft
      */
-    public void setRotateLeft(boolean rotateLeft) {
-        if (!this.rotateLeft && !rotateRight)
+    public boolean setRotateLeft(boolean rotateLeft) {
+        if (!this.rotateLeft && !rotateRight) {
             this.rotateLeft = rotateLeft;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -50,17 +66,87 @@ public class Head extends GameObject {
      * It only sets turn if turning is not set already
      * @param rotateRight
      */
-    public void setRotateRight(boolean rotateRight) {
-        if(!this.rotateRight && !rotateLeft)
+    public boolean setRotateRight(boolean rotateRight) {
+        if(!this.rotateRight && !rotateLeft) {
             this.rotateRight = rotateRight;
+            return true;
+        }
+        return false;
     }
 
     /**
-     * Set player dead
-     * @param b
+     * Handles Left key, if facing up, rotates left, if facing down, rotates right.
+     * @param b true or false
      */
-    public void hit(boolean b){
-        dead = b;
+    public void setLeft(boolean b){
+            switch (facing){
+                case UP:
+                    if(setRotateLeft(b) && b)
+                        facing = Facing.LEFT;
+                    break;
+                case DOWN:
+                    if(setRotateRight(b) && b)
+                        facing = Facing.LEFT;
+                    break;
+            }
+    }
+
+    /**
+     * Handles Right key, if facing up, rotates left, if facing down, rotates right.
+     * @param b true or false
+     */
+    public void setRight(boolean b){
+        switch (facing){
+            case DOWN:
+                if(setRotateLeft(b) && b)
+                    facing=Facing.RIGHT;
+                break;
+            case UP:
+                if(setRotateRight(b) && b)
+                    facing=Facing.RIGHT;
+        }
+
+    }
+
+    /**
+     * Handles Up key, if facing right, rotates left, if facing left, rotates right.
+     * @param b true or false
+     */
+    public void setUp(boolean b){
+        switch (facing){
+            case RIGHT:
+                if(setRotateLeft(b) && b)
+                    facing=Facing.UP;
+                break;
+            case LEFT:
+                if(setRotateRight(b) && b)
+                    facing=Facing.UP;
+                break;
+        }
+    }
+
+
+    /**
+     * Handles Up key, if facing left, rotates left, if facing right, rotates right.
+     * @param b true or false
+     */
+    public void setDown(boolean b){
+        switch(facing ){
+            case LEFT:
+                if(setRotateLeft(b) && b)
+                    facing=Facing.DOWN;
+                break;
+            case RIGHT:
+                if(setRotateRight(b) && b)
+                    facing=Facing.DOWN;
+                break;
+        }
+    }
+    /**
+     * Set player dead
+     */
+    public void hit(){
+        dead = !dead;
     }
 
     public boolean isDead(){ return dead;}
