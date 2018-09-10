@@ -1,7 +1,6 @@
 package pt.bisonte.snake.entities;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import pt.bisonte.snake.Game;
 
 public class Head extends GameObject {
 
@@ -15,8 +14,6 @@ public class Head extends GameObject {
     private boolean rotateLeft;
     private boolean rotateRight;
 
-    private float width;
-    private float height;
 
     private boolean dead;
     private boolean eat;
@@ -26,10 +23,10 @@ public class Head extends GameObject {
     /**
      * Constructor for the head.
      */
-    public Head() {
+    public Head(int size) {
 
-        //set width and height
-        width=height=Game.GRID_CELL;
+        //set WIDTH and HEIGHT
+        width=height=size;
 
         //initial speed
         speed = width;
@@ -172,7 +169,7 @@ public class Head extends GameObject {
     @Override
     public void update(float dt) {
 
-            eat = false;
+        eat = false;
 
             //rotating
             if (rotateLeft) {
@@ -204,17 +201,21 @@ public class Head extends GameObject {
     public void draw(ShapeRenderer sr) {
         sr.setColor(0, 0.25f, 0, 1);
         sr.begin(ShapeRenderer.ShapeType.Filled);
-        sr.rect(x-width/2,y-height/2,width, height);
+        sr.rect(x,y,width, height);
         sr.end();
         sr.setColor(0,2,0,1);
         sr.begin(ShapeRenderer.ShapeType.Line);
-        sr.rect (x-width/2,y-height/2,width, height);
+        sr.rect (x,y,width, height);
         sr.end();
 
-            sr.setColor(0,0.1f,0,1);
-            sr.begin(ShapeRenderer.ShapeType.Filled);
-            sr.rect (x-width/2+4,y-height/2+4,width-8, height-8);
-            sr.end();
+        sr.setColor(0,0.1f,0,1);
+        sr.begin(ShapeRenderer.ShapeType.Filled);
+        sr.rect (x+4,y+4,width-8, height-8);
+        sr.end();
+        sr.setColor(1,0,0,1);
+        sr.begin(ShapeRenderer.ShapeType.Filled);
+        sr.circle(x,y,2);
+        sr.end();
 
     }
 }

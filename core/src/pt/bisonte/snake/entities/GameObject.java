@@ -1,6 +1,7 @@
 package pt.bisonte.snake.entities;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import pt.bisonte.snake.Game;
 
 public abstract class GameObject {
     //postition
@@ -20,10 +21,6 @@ public abstract class GameObject {
     protected float width;
     protected float height;
 
-    //shape(polygon
-    protected float[] shapeX;
-    protected float[] shapeY;
-
     public float getX() {
         return x;
     }
@@ -32,25 +29,15 @@ public abstract class GameObject {
         return y;
     }
 
-    public float[] getShapeX() {
-        return shapeX;
-    }
-
-    public float[] getShapeY() {
-        return shapeY;
-    }
-
     /**
      * Sets coordinates for center of a body part.
-     * @param x - width coordinate
+     * @param x - WIDTH coordinate
      * @param y - eight coordinate
      */
     public void setPosition(float x, float y){
         this.x=x;
         this.y=y;
     }
-
-    //public abstract void setShape();
 
     /**
      * Return true if coordinates x and y are the same,
@@ -68,5 +55,22 @@ public abstract class GameObject {
     public abstract void update(float dt);
 
     public abstract void draw(ShapeRenderer sr);
+
+    // when end the screen it jumps to opposite side screen
+    public void wrap() {
+        if (x < 0) {
+            x = Game.WIDTH-width;
+        }
+        if (x > Game.WIDTH-width) {
+            x = 0;
+        }
+        if (y < 0){
+            y = Game.HEIGHT-height;
+        }
+        if (y > Game.HEIGHT-height ) {
+            y = 0;
+        }
+
+    }
 
 }

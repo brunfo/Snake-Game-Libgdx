@@ -15,7 +15,7 @@ public class Fruit extends GameObject {
         removeTimer=0;
         removeTime=10;
 
-        //set width and height
+        //set WIDTH and HEIGHT
         width=height=16;
 
         score=100;
@@ -45,7 +45,7 @@ public class Fruit extends GameObject {
     public void draw(ShapeRenderer sr) {
         sr.setColor(1,0,0,1);
         sr.begin(ShapeRenderer.ShapeType.Filled);
-        sr.rect(x-width/2,y-height/2,width, height);
+        sr.rect(x,y,width, height);
         sr.end();
 
     }

@@ -2,33 +2,26 @@ package pt.bisonte.snake.gamestates;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import pt.bisonte.snake.Game;
-import pt.bisonte.snake.entities.Head;
 import pt.bisonte.snake.entities.Fruit;
+import pt.bisonte.snake.entities.Head;
 import pt.bisonte.snake.entities.Tail;
-import pt.bisonte.snake.level.Board;
 import pt.bisonte.snake.managers.GameStateManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class PlayState extends GameState {
+public class PlayState extends SetupPlayState {
 
     private Head head;
     private List<Tail> body;
     private Fruit fruit;
 
-    private ShapeRenderer sr;
-
     private float moveTimer;
     private float moveTime; //move every x second
 
-    private Board board;
 
     public PlayState(GameStateManager gameStateManager) {
         super(gameStateManager);
@@ -36,24 +29,23 @@ public class PlayState extends GameState {
 
     @Override
     public void init() {
-        sr = new ShapeRenderer();
+        super.init();
 
-        board=new Board(15,15);
         //Timers
         moveTimer = 0;
         moveTime = 0.25f;
 
-        head = new Head();
+        head = new Head(level.getGridCell());
 
         resetBody();
 
     }
 
-    private void resetBody(){
+    private void resetBody() {
         head.reset();
         head.setPosition(
-                (board.startX()*Game.GRID_CELL),
-                (board.startY()*Game.GRID_CELL)
+                (5 * level.getGridCell()),
+                (5 * level.getGridCell())
         );
 
 
@@ -61,50 +53,15 @@ public class PlayState extends GameState {
 
         //add 2 body
         body.add(new Tail(head.getX(), head.getY()));
-        body.add(new Tail(body.get(0).getX(), body.get(0).getY()-Game.GRID_CELL));
-        body.add(new Tail(body.get(1).getX(), body.get(1).getY()-Game.GRID_CELL));
-        body.add(new Tail(body.get(2).getX(), body.get(2).getY()-Game.GRID_CELL));
+        body.add(new Tail(body.get(0).getX(), body.get(0).getY() - level.getGridCell()));
+        body.add(new Tail(body.get(1).getX(), body.get(1).getY() - level.getGridCell()));
+        body.add(new Tail(body.get(2).getX(), body.get(2).getY() - level.getGridCell()));
     }
 
     @Override
     public void update(float dt) {
         //get user input
         handleInput();
-
-
-
-        //create fruit
-        if (fruit == null) {
-            float x;
-            float y;
-            boolean contains;
-            do {
-                //TODO the fruit should not spawn in the same position as any object
-                // first get the position random
-                x = board.getX()+
-                        MathUtils.random(board.getColumns()-1)* Game.GRID_CELL+
-                        Game.GRID_CELL *0.5f;
-                y = board.getY()+
-                        MathUtils.random(board.getRows()-1)*Game.GRID_CELL +
-                        Game.GRID_CELL * 0.5f;
-
-                // check if space is free
-                contains = head.contains(x,y);
-
-                for (Tail bodyPart: body){
-                    contains=bodyPart.contains(x, y);
-                }
-
-            } while (contains);
-
-            fruit = new Fruit(x, y);
-        }
-        else{
-            fruit.update(dt);
-            if(fruit.shouldRemove())
-                fruit=null;
-        }
-
 
 
         moveTimer += dt;
@@ -118,8 +75,8 @@ public class PlayState extends GameState {
             //update body position
             if (body.size() != 0) {
                 //if player has eat a fruit add a body part
-                if(head.hasEat())
-                    body.add(new Tail(0,0));
+                if (head.hasEat())
+                    body.add(new Tail(0, 0));
                 //sets new position of body parts
                 for (int i = body.size() - 1; i >= 0; i--) {
                     if (i == 0)
@@ -129,26 +86,57 @@ public class PlayState extends GameState {
                 }
             }
 
-            if(head.isDead())
+            if (head.isDead())
                 resetBody();
+
 
             //update head
             head.update(dt);
+            head.wrap();
         }
+            //create fruit
+            if (fruit == null) {
+                float x;
+                float y;
+                boolean contains ;
+                do {
+                    //TODO the fruit should not spawn in the same position as any object
+                    // first get the position random
+                    x = MathUtils.random(level.getColumns() - 1) * level.getGridCell();
+                    y = MathUtils.random(level.getRows() - 1) * level.getGridCell();
+
+                    // check if space is free
+                    contains  = head.contains(x, y);
+
+                    for (Tail bodyPart : body) {
+                        contains  = bodyPart.contains(x, y);
+                        if(contains)
+                            break; //if contains exit for loop
+                    }
+
+                } while (contains);
+
+                fruit = new Fruit(x, y);
+            } else {
+                fruit.update(dt);
+                if (fruit.shouldRemove())
+                    fruit = null;
+            }
+
     }
 
     /**
      * Check collision point to point intersection
      */
-    private void checkCollision(){
+    private void checkCollision() {
         //head to tail
-        for (Tail bodyPart: body){
-            if(bodyPart.contains(head.getX(), head.getY()))
+        for (Tail bodyPart : body) {
+            if (bodyPart.contains(head.getX(), head.getY()))
                 head.hit();
 
-    }
+        }
         //head to fruit
-        if(fruit!=null) {
+        if (fruit != null) {
             head.eat(fruit.contains(head.getX(), head.getY()), fruit.getScore());
             if (fruit.shouldRemove())
                 fruit = null;
@@ -158,10 +146,8 @@ public class PlayState extends GameState {
 
     @Override
     public void draw() {
+        super.draw();
         sr.setProjectionMatrix(Game.camera.combined);
-
-
-        board.draw(sr);
 
         head.draw(sr);
 
@@ -169,7 +155,7 @@ public class PlayState extends GameState {
         for (Tail bodyPart : body) {
             bodyPart.draw(sr);
         }
-        if(fruit!=null)
+        if (fruit != null)
             fruit.draw(sr);
 
 
@@ -178,7 +164,7 @@ public class PlayState extends GameState {
     @Override
     public void handleInput() {
         //user preferences input keys
-        switch(Game.gameStateManager.optionKeys) {
+        switch (Game.gameStateManager.optionKeys) {
             case SNAKE://snake perspective
                 head.setRotateLeft(Gdx.input.isKeyJustPressed(Input.Keys.LEFT));
                 head.setRotateRight(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT));
