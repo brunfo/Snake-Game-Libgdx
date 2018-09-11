@@ -3,6 +3,7 @@ package pt.bisonte.snake.level;
 
 public class Level1 extends Level {
 
+
     public Level1() {
         super();
     }
@@ -15,7 +16,10 @@ public class Level1 extends Level {
         this.columns=15;
         this.rows= 15;
         this.gridCell=15;
+        level =1;
     }
+
+
 
 
 }

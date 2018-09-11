@@ -2,11 +2,16 @@ package pt.bisonte.snake.gamestates;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import pt.bisonte.snake.Game;
 import pt.bisonte.snake.entities.Fruit;
 import pt.bisonte.snake.entities.Head;
 import pt.bisonte.snake.entities.Tail;
+import pt.bisonte.snake.managers.FontManager;
 import pt.bisonte.snake.managers.GameStateManager;
 
 import java.util.ArrayList;
@@ -14,6 +19,11 @@ import java.util.List;
 
 
 public class PlayState extends SetupPlayState {
+
+    private SpriteBatch sb;
+    private BitmapFont titleFont;
+    private BitmapFont font;
+
 
     private Head head;
     private List<Tail> body;
@@ -30,6 +40,9 @@ public class PlayState extends SetupPlayState {
     @Override
     public void init() {
         super.init();
+
+        sb = new SpriteBatch();
+        titleFont = new BitmapFont();
 
         //Timers
         moveTimer = 0;
@@ -52,10 +65,9 @@ public class PlayState extends SetupPlayState {
         body = new ArrayList<Tail>();
 
         //add 2 body
-        body.add(new Tail(head.getX(), head.getY()));
+        body.add(new Tail(head.getX(), head.getY()- level.getGridCell()));
         body.add(new Tail(body.get(0).getX(), body.get(0).getY() - level.getGridCell()));
         body.add(new Tail(body.get(1).getX(), body.get(1).getY() - level.getGridCell()));
-        body.add(new Tail(body.get(2).getX(), body.get(2).getY() - level.getGridCell()));
     }
 
     @Override
@@ -85,14 +97,15 @@ public class PlayState extends SetupPlayState {
                         body.get(i).setPosition(body.get(i - 1).getX(), body.get(i - 1).getY());
                 }
             }
+            //update head
+            head.update(dt);
+            head.wrap();
 
             if (head.isDead())
                 resetBody();
 
 
-            //update head
-            head.update(dt);
-            head.wrap();
+
         }
             //create fruit
             if (fruit == null) {
@@ -148,6 +161,30 @@ public class PlayState extends SetupPlayState {
     public void draw() {
         super.draw();
         sr.setProjectionMatrix(Game.camera.combined);
+        sb.setProjectionMatrix(Game.camera.combined);
+
+        
+        GlyphLayout glyphLayout = new GlyphLayout();
+        titleFont = FontManager.INSTANCE.setFont(40, new Color(0,1,1,1));
+        font= FontManager.INSTANCE.setFont(15, new Color(1,1,1,1));
+
+        sb.begin();
+        // Set text and font each time you want to calculate bounds.
+        glyphLayout.setText(titleFont, "SNAKE");
+        titleFont.draw(sb, glyphLayout, (Game.WIDTH - glyphLayout.width) / 2, Game.HEIGHT + 60);
+
+        glyphLayout.setText(font, "Score: " + (int) head.getScore());
+        font.draw(sb,glyphLayout, 0, Game.HEIGHT + 15);
+
+        glyphLayout.setText(font, "Level: " + (int) level.getLevel());
+        font.draw(sb,glyphLayout, Game.WIDTH-glyphLayout.width, - 5);
+
+        sb.end();
+
+        for (int i= 0; i<head.getLives(); i++){
+            new Head(15).setPosition(Game.WIDTH-15-i*20, Game.HEIGHT +5).draw(sr);
+        }
+
 
         head.draw(sr);
 

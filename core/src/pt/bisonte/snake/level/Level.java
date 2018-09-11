@@ -5,6 +5,8 @@ public abstract class Level {
     protected int columns;
     protected int gridCell;
 
+    protected int level;
+
 
 
     protected Level(){
@@ -18,5 +20,7 @@ public abstract class Level {
     public int getColumns(){return columns;}
 
     public int  getGridCell(){return gridCell;}
+
+    public int getLevel(){ return level;}
 
 }

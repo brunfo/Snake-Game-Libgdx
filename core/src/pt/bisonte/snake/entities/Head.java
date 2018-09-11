@@ -19,6 +19,7 @@ public class Head extends GameObject {
     private boolean eat;
 
     private double score;
+    private int lives;
 
     /**
      * Constructor for the head.
@@ -30,6 +31,8 @@ public class Head extends GameObject {
 
         //initial speed
         speed = width;
+
+        lives = 3;
 
         reset();
     }
@@ -144,6 +147,7 @@ public class Head extends GameObject {
      */
     public void hit(){
         dead = !dead;
+        lives-=1;
     }
 
     public boolean isDead(){ return dead;}
@@ -161,6 +165,11 @@ public class Head extends GameObject {
     }
 
     public boolean hasEat(){ return eat;}
+
+
+    public double getScore() { return score;};
+
+    public int getLives(){ return lives;}
 
      /**
      * Updates the head, positioning, facing angle, etc.

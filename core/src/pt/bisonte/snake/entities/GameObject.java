@@ -33,10 +33,12 @@ public abstract class GameObject {
      * Sets coordinates for center of a body part.
      * @param x - WIDTH coordinate
      * @param y - eight coordinate
+     * @return - Returns this Game Object, allowing to chain methods.
      */
-    public void setPosition(float x, float y){
+    public GameObject setPosition(float x, float y){
         this.x=x;
         this.y=y;
+        return this;
     }
 
     /**
