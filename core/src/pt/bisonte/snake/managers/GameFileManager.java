@@ -49,6 +49,7 @@ public class GameFileManager {
 
     /**
      * Checks if the file exists.
+     *
      * @return true or false.
      */
     private static boolean saveFileExists() {

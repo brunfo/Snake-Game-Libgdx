@@ -32,6 +32,7 @@ public class GameStateManager {
 
     /**
      * Sets new game state.
+     *
      * @param state - MENU, PLAY, HIGHSCORES, GAMEOVER.
      */
     public void setState(State state) {
