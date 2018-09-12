@@ -4,9 +4,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Head extends GameObject {
 
-     private enum Facing{
+    private enum Facing {
         UP, DOWN, LEFT, RIGHT
-    };
+    }
 
     private Facing facing;
 
@@ -27,7 +27,7 @@ public class Head extends GameObject {
     public Head(int size) {
 
         //set WIDTH and HEIGHT
-        width=height=size;
+        width = height = size;
 
         //initial speed
         speed = width;
@@ -40,18 +40,19 @@ public class Head extends GameObject {
     /**
      * Reset previous orientation
      */
-    public void reset(){
+    public void reset() {
         //initial orientation
         radians = (float) Math.PI / 2;
-        facing=Facing.UP;
+        facing = Facing.UP;
 
-        dead=false;
+        dead = false;
     }
 
     /**
      * Signs head to rotate left. Receives a boolean parameter from Game input keys.
      * It only sets turn if turning is not set already
-     * @param rotateLeft
+     *
+     * @param rotateLeft - true or false.
      */
     public boolean setRotateLeft(boolean rotateLeft) {
         if (!this.rotateLeft && !rotateRight) {
@@ -64,10 +65,11 @@ public class Head extends GameObject {
     /**
      * Signs head to rotate right. Receives a boolean parameter from Game input keys.
      * It only sets turn if turning is not set already
-     * @param rotateRight
+     *
+     * @param rotateRight - true or false.
      */
     public boolean setRotateRight(boolean rotateRight) {
-        if(!this.rotateRight && !rotateLeft) {
+        if (!this.rotateRight && !rotateLeft) {
             this.rotateRight = rotateRight;
             return true;
         }
@@ -76,51 +78,53 @@ public class Head extends GameObject {
 
     /**
      * Handles Left key, if facing up, rotates left, if facing down, rotates right.
-     * @param b true or false
+     *
+     * @param b - true or false.
      */
-    public void setLeft(boolean b){
-            switch (facing){
-                case UP:
-                    if(setRotateLeft(b) && b)
-                        facing = Facing.LEFT;
-                    break;
-                case DOWN:
-                    if(setRotateRight(b) && b)
-                        facing = Facing.LEFT;
-                    break;
-            }
+    public void setLeft(boolean b) {
+        switch (facing) {
+            case UP:
+                if (setRotateLeft(b) && b)
+                    facing = Facing.LEFT;
+                break;
+            case DOWN:
+                if (setRotateRight(b) && b)
+                    facing = Facing.LEFT;
+                break;
+        }
     }
 
     /**
      * Handles Right key, if facing up, rotates left, if facing down, rotates right.
-     * @param b true or false
+     *
+     * @param b - true or false.
      */
-    public void setRight(boolean b){
-        switch (facing){
+    public void setRight(boolean b) {
+        switch (facing) {
             case DOWN:
-                if(setRotateLeft(b) && b)
-                    facing=Facing.RIGHT;
+                if (setRotateLeft(b) && b)
+                    facing = Facing.RIGHT;
                 break;
             case UP:
-                if(setRotateRight(b) && b)
-                    facing=Facing.RIGHT;
+                if (setRotateRight(b) && b)
+                    facing = Facing.RIGHT;
         }
-
     }
 
     /**
      * Handles Up key, if facing right, rotates left, if facing left, rotates right.
-     * @param b true or false
+     *
+     * @param b - true or false.
      */
-    public void setUp(boolean b){
-        switch (facing){
+    public void setUp(boolean b) {
+        switch (facing) {
             case RIGHT:
-                if(setRotateLeft(b) && b)
-                    facing=Facing.UP;
+                if (setRotateLeft(b) && b)
+                    facing = Facing.UP;
                 break;
             case LEFT:
-                if(setRotateRight(b) && b)
-                    facing=Facing.UP;
+                if (setRotateRight(b) && b)
+                    facing = Facing.UP;
                 break;
         }
     }
@@ -128,51 +132,82 @@ public class Head extends GameObject {
 
     /**
      * Handles Up key, if facing left, rotates left, if facing right, rotates right.
-     * @param b true or false
+     *
+     * @param b - true or false.
      */
-    public void setDown(boolean b){
-        switch(facing ){
+    public void setDown(boolean b) {
+        switch (facing) {
             case LEFT:
-                if(setRotateLeft(b) && b)
-                    facing=Facing.DOWN;
+                if (setRotateLeft(b) && b)
+                    facing = Facing.DOWN;
                 break;
             case RIGHT:
-                if(setRotateRight(b) && b)
-                    facing=Facing.DOWN;
+                if (setRotateRight(b) && b)
+                    facing = Facing.DOWN;
                 break;
         }
     }
+
     /**
      * Set player dead
      */
-    public void hit(){
+    public void hit() {
         dead = !dead;
-        lives-=1;
+        lives -= 1;
     }
 
-    public boolean isDead(){ return dead;}
+    /**
+     * Checks if player is dead.
+     *
+     * @return - true or false.
+     */
+    public boolean isDead() {
+        return dead;
+    }
 
     /**
      * If true the player sums score
-     * @param b true or false
+     *
+     * @param b     true or false
      * @param score int score
      */
-    public void eat(boolean b, int score){
-        if(b) {
+    public void eat(boolean b, int score) {
+        if (b) {
             this.score += score;
             eat = true;
         }
     }
 
-    public boolean hasEat(){ return eat;}
+    /**
+     * Checks if the snake has ate.
+     *
+     * @return true or false.
+     */
+    public boolean hasEat() {
+        return eat;
+    }
 
+    /**
+     * Gets the score of the player.
+     *
+     * @return score.
+     */
+    public double getScore() {
+        return score;
+    }
 
-    public double getScore() { return score;};
+    /**
+     * Gets remaining extra lives
+     *
+     * @return number of extra lives
+     */
+    public int getLives() {
+        return lives;
+    }
 
-    public int getLives(){ return lives;}
-
-     /**
+    /**
      * Updates the head, positioning, facing angle, etc.
+     *
      * @param dt - game timer
      */
     @Override
@@ -180,50 +215,51 @@ public class Head extends GameObject {
 
         eat = false;
 
-            //rotating
-            if (rotateLeft) {
-                radians += (float) Math.PI / 2;
-                rotateLeft=false;
-            }
-            if (rotateRight) {
-                radians -= (float) Math.PI / 2;
-                rotateRight = false;
-            }
+        //rotating
+        if (rotateLeft) {
+            radians += (float) Math.PI / 2;
+            rotateLeft = false;
+        }
+        if (rotateRight) {
+            radians -= (float) Math.PI / 2;
+            rotateRight = false;
+        }
 
 
-            //calculate direction
-            dx = Math.round(Math.cos(radians)) * speed;
-            dy = Math.round(Math.sin(radians)) * speed;
+        //calculate direction
+        dx = Math.round(Math.cos(radians)) * speed;
+        dy = Math.round(Math.sin(radians)) * speed;
 
-            //set new position
-            x += dx;
-            y += dy;
+        //set new position
+        x += dx;
+        y += dy;
 
     }
 
 
     /**
      * Draws the shape.
+     *
      * @param sr - ShapeRenderer
      */
     @Override
     public void draw(ShapeRenderer sr) {
         sr.setColor(0, 0.25f, 0, 1);
         sr.begin(ShapeRenderer.ShapeType.Filled);
-        sr.rect(x,y,width, height);
+        sr.rect(x, y, width, height);
         sr.end();
-        sr.setColor(0,2,0,1);
+        sr.setColor(0, 2, 0, 1);
         sr.begin(ShapeRenderer.ShapeType.Line);
-        sr.rect (x,y,width, height);
+        sr.rect(x, y, width, height);
         sr.end();
 
-        sr.setColor(0,0.1f,0,1);
+        sr.setColor(0, 0.1f, 0, 1);
         sr.begin(ShapeRenderer.ShapeType.Filled);
-        sr.rect (x+4,y+4,width-8, height-8);
+        sr.rect(x + 4, y + 4, width - 8, height - 8);
         sr.end();
-        sr.setColor(1,0,0,1);
+        sr.setColor(1, 0, 0, 1);
         sr.begin(ShapeRenderer.ShapeType.Filled);
-        sr.circle(x,y,2);
+        sr.circle(x, y, 2);
         sr.end();
 
     }

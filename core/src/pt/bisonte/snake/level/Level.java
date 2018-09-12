@@ -1,26 +1,33 @@
 package pt.bisonte.snake.level;
 
 public abstract class Level {
-    protected int rows;
-    protected int columns;
-    protected int gridCell;
+    int rows;
+    int columns;
+    int gridCell;
 
-    protected int level;
+    int level;
 
 
-
-    protected Level(){
+    Level() {
         init();
     }
 
     public abstract void init();
 
-    public int getRows(){ return rows;}
+    public int getRows() {
+        return rows;
+    }
 
-    public int getColumns(){return columns;}
+    public int getColumns() {
+        return columns;
+    }
 
-    public int  getGridCell(){return gridCell;}
+    public int getGridCell() {
+        return gridCell;
+    }
 
-    public int getLevel(){ return level;}
+    public int getLevel() {
+        return level;
+    }
 
 }
