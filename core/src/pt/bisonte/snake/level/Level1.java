@@ -13,13 +13,11 @@ public class Level1 extends Level {
      */
     @Override
     public void init() {
-        this.columns=15;
-        this.rows= 15;
-        this.gridCell=15;
-        level =1;
+        this.columns = 15;
+        this.rows = 15;
+        this.gridCell = 15;
+        level = 1;
     }
-
-
 
 
 }

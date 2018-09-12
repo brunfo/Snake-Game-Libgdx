@@ -4,51 +4,50 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector3;
 import pt.bisonte.snake.managers.GameStateManager;
 
 public class Game extends ApplicationAdapter {
 
-	public static float WIDTH;
-	public static float HEIGHT;
-	public static int GRID_CELL;
+    public static float WIDTH;
+    public static float HEIGHT;
+    public static int GRID_CELL;
 
-	public static OrthographicCamera camera;
+    public static OrthographicCamera camera;
+    private static Vector3 cameraPosition;
 
-	public static GameStateManager gameStateManager;
+    private static GameStateManager gameStateManager;
 
 
-	@Override
-	public void create () {
-	WIDTH = Gdx.graphics.getWidth();
-	HEIGHT = Gdx.graphics.getHeight();
-	GRID_CELL =15;
+    @Override
+    public void create() {
+        WIDTH = Gdx.graphics.getWidth();
+        HEIGHT = Gdx.graphics.getHeight();
+        GRID_CELL = 15;
 
-	camera = new OrthographicCamera(WIDTH, HEIGHT);
-	camera.translate(WIDTH /2, HEIGHT /2);
-	camera.update();
+        camera = new OrthographicCamera(WIDTH, HEIGHT);
+        camera.translate(WIDTH / 2, HEIGHT / 2);
+        cameraPosition = camera.position.cpy();
+        camera.update();
 
-	gameStateManager= new GameStateManager();
-	}
-
-    public static void getWidth(float width) {
-        Game.WIDTH = width;
+        gameStateManager = new GameStateManager();
     }
 
-    public static void getHeight(float height) {
-        Game.HEIGHT = height;
+    public static void setCameraPosition() {
+        camera.position.set(cameraPosition);
+        camera.update();
     }
 
     @Override
-	public void render () {
-		Gdx.gl.glClearColor(0.0f, 0.45f, 0.0f, 0.5f);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    public void render() {
+        Gdx.gl.glClearColor(0.0f, 0.45f, 0.0f, 0.5f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		gameStateManager.update(Gdx.graphics.getDeltaTime());
-		gameStateManager.draw();
+        gameStateManager.update(Gdx.graphics.getDeltaTime());
+        gameStateManager.draw();
+    }
 
-	}
-	
-	@Override
-	public void dispose () {
-	}
+    @Override
+    public void dispose() {
+    }
 }

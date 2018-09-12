@@ -10,32 +10,36 @@ public class Fruit extends GameObject {
     private int score;
 
 
-    public Fruit(float x, float y){
-        setPosition(x,y);
-        removeTimer=0;
-        removeTime=10;
+    public Fruit(float x, float y) {
+        setPosition(x, y);
+        removeTimer = 0;
+        removeTime = 10;
 
         //set WIDTH and HEIGHT
-        width=height=16;
+        width = height = 16;
 
-        score=100;
+        score = 100;
 
     }
 
-    public boolean shouldRemove(){ return remove;}
-
-    public boolean contains(float x, float y){
-        remove=super.contains(x,y);
+    public boolean shouldRemove() {
         return remove;
     }
 
-    public int getScore(){ return score;}
+    public boolean contains(float x, float y) {
+        remove = super.contains(x, y);
+        return remove;
+    }
+
+    public int getScore() {
+        return score;
+    }
 
     @Override
     public void update(float dt) {
-        removeTimer+=dt;
-        if(removeTimer > removeTime){
-            removeTimer=0;
+        removeTimer += dt;
+        if (removeTimer > removeTime) {
+            removeTimer = 0;
             remove = true;
         }
 
@@ -43,9 +47,9 @@ public class Fruit extends GameObject {
 
     @Override
     public void draw(ShapeRenderer sr) {
-        sr.setColor(1,0,0,1);
+        sr.setColor(1, 0, 0, 1);
         sr.begin(ShapeRenderer.ShapeType.Filled);
-        sr.rect(x,y,width, height);
+        sr.rect(x, y, width, height);
         sr.end();
 
     }
