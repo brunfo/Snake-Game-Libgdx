@@ -1,11 +1,19 @@
 package pt.bisonte.snake.level;
 
+import pt.bisonte.snake.entities.Wall;
+
+import java.util.List;
+
 public abstract class Level {
     int rows;
     int columns;
     int gridCell;
 
     int level;
+
+    int fruitToNextLevel;
+
+    protected List<Wall> walls;
 
 
     Level() {
@@ -30,4 +38,14 @@ public abstract class Level {
         return level;
     }
 
+    public int fruitToNextLevel() {
+        return fruitToNextLevel;
+    }
+
+
+    public void up() {
+        fruitToNextLevel += 10;
+    }
+
+    public List<Wall> getWalls(){ return walls;}
 }

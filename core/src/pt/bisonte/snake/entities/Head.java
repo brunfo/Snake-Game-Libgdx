@@ -21,6 +21,9 @@ public class Head extends GameObject {
     private double score;
     private int lives;
 
+    private int fruitAte;
+
+
     /**
      * Constructor for the head.
      */
@@ -77,7 +80,7 @@ public class Head extends GameObject {
     }
 
     /**
-     * Handles Left key, if facing up, rotates left, if facing down, rotates right.
+     * Handles Left key, if facing fruitToNextLevel, rotates left, if facing down, rotates right.
      *
      * @param b - true or false.
      */
@@ -95,7 +98,7 @@ public class Head extends GameObject {
     }
 
     /**
-     * Handles Right key, if facing up, rotates left, if facing down, rotates right.
+     * Handles Right key, if facing fruitToNextLevel, rotates left, if facing down, rotates right.
      *
      * @param b - true or false.
      */
@@ -171,12 +174,20 @@ public class Head extends GameObject {
      * @param b     true or false
      * @param score int score
      */
-    public void eat(boolean b, int score) {
+    public boolean eat(boolean b, int score) {
         if (b) {
             this.score += score;
+            fruitAte++;
             eat = true;
         }
+        return b;
     }
+
+    /**
+     * Gets the number of fruits ate.
+     * @return - number os fruits.
+     */
+    public int fruitsAte(){ return fruitAte; }
 
     /**
      * Checks if the snake has ate.
@@ -244,22 +255,19 @@ public class Head extends GameObject {
      */
     @Override
     public void draw(ShapeRenderer sr) {
-        sr.setColor(0, 0.25f, 0, 1);
+        sr.setColor(0, 0.15f, 0, 1);
         sr.begin(ShapeRenderer.ShapeType.Filled);
         sr.rect(x, y, width, height);
         sr.end();
-        sr.setColor(0, 2, 0, 1);
+        sr.setColor(0, 1f, 0, 0.5f);
         sr.begin(ShapeRenderer.ShapeType.Line);
         sr.rect(x, y, width, height);
         sr.end();
 
-        sr.setColor(0, 0.1f, 0, 1);
+        sr.setColor(0, 0.45f, 0, 1);
         sr.begin(ShapeRenderer.ShapeType.Filled);
         sr.rect(x + 4, y + 4, width - 8, height - 8);
         sr.end();
-        sr.setColor(1, 0, 0, 1);
-        sr.begin(ShapeRenderer.ShapeType.Filled);
-        sr.circle(x, y, 2);
         sr.end();
 
     }

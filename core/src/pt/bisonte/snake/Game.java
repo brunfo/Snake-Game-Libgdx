@@ -41,7 +41,7 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(0.0f, 0.45f, 0.0f, 0.5f);
+        Gdx.gl.glClearColor(0.0f, 0.0f, 0.1f, 0.5f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         gameStateManager.update(Gdx.graphics.getDeltaTime());

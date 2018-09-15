@@ -12,6 +12,7 @@ import pt.bisonte.snake.Game;
 import pt.bisonte.snake.entities.Fruit;
 import pt.bisonte.snake.entities.Head;
 import pt.bisonte.snake.entities.Tail;
+import pt.bisonte.snake.entities.Wall;
 import pt.bisonte.snake.level.Level;
 import pt.bisonte.snake.level.Level1;
 import pt.bisonte.snake.managers.FontManager;
@@ -38,8 +39,11 @@ public class PlayState extends GameState {
     private List<Tail> body;
     private Fruit fruit;
 
+
     private float moveTimer;
     private float moveTime; //move every x second
+
+    private boolean playTime;
 
 
     public PlayState(GameStateManager gameStateManager) {
@@ -74,13 +78,16 @@ public class PlayState extends GameState {
                 (5 * level.getGridCell())
         );
 
-
         body = new ArrayList<Tail>();
 
         //add 2 body
         body.add(new Tail(head.getX(), head.getY() - level.getGridCell(), level.getGridCell()));
         body.add(new Tail(body.get(0).getX(), body.get(0).getY() - level.getGridCell(), level.getGridCell()));
         body.add(new Tail(body.get(1).getX(), body.get(1).getY() - level.getGridCell(), level.getGridCell()));
+    }
+
+    private boolean isPlayTime() {
+        return playTime;
     }
 
     @Override
@@ -90,6 +97,11 @@ public class PlayState extends GameState {
 
 
         moveTimer += dt;
+
+        //if is paused doesn't update the rest
+        if (!isPlayTime()) {
+            return;
+        }
 
         //only moves every time defined by moveTime
         if (moveTimer > moveTime) {
@@ -118,8 +130,10 @@ public class PlayState extends GameState {
                 if (head.getLives() < 0) {
                     GameFileManager.gameData.setTentativeScore((long) head.getScore());
                     gameStateManager.setState(GameStateManager.State.GAMEOVER);
-                } else
+                } else {
                     resetBody();
+                    playTime = !playTime;
+                }
 
 
         }
@@ -127,7 +141,7 @@ public class PlayState extends GameState {
         if (fruit == null) {
             float x;
             float y;
-            boolean contains;
+            boolean containsHead, containsFruit = false, containsWall = false;
             do {
                 //TODO the fruit should not spawn in the same position as any object
                 // first get the position random
@@ -135,15 +149,21 @@ public class PlayState extends GameState {
                 y = MathUtils.random(level.getRows() - 1) * level.getGridCell();
 
                 // check if space is free
-                contains = head.contains(x, y);
+                containsHead = head.contains(x, y);
 
                 for (Tail bodyPart : body) {
-                    contains = bodyPart.contains(x, y);
-                    if (contains)
+                    containsFruit = bodyPart.contains(x, y);
+                    if (containsFruit)
                         break; //if contains exit for loop
                 }
 
-            } while (contains);
+                for (Wall pWall : level.getWalls()) {
+                    containsWall = pWall.contains(x, y);
+                    if (containsWall)
+                        break;
+                }
+
+            } while (containsHead || containsFruit || containsWall);
 
             fruit = new Fruit(x, y);
         } else {
@@ -151,7 +171,6 @@ public class PlayState extends GameState {
             if (fruit.shouldRemove())
                 fruit = null;
         }
-
     }
 
     /**
@@ -162,11 +181,26 @@ public class PlayState extends GameState {
         for (Tail bodyPart : body) {
             if (bodyPart.contains(head.getX(), head.getY()))
                 head.hit();
-
         }
+
+        //head to walls
+        for (Wall pWall : level.getWalls()) {
+            if (pWall.contains(head.getX(), head.getY()))
+                head.hit();
+        }
+
         //head to fruit
         if (fruit != null) {
-            head.eat(fruit.contains(head.getX(), head.getY()), fruit.getScore());
+            if (head.eat(fruit.contains(head.getX(), head.getY()), fruit.getScore())) {
+                if (head.fruitsAte() >= level.fruitToNextLevel()) {
+                    // if isn't bonus fruit, decreases 10% time to update, increasing speed.
+                    moveTime -= fruit.isBonus() ? 0 : moveTime * 0.10f;
+                    level.up();
+                }
+                //if fruits is bonus, then the update time increases 10%, decreasing speed.
+                moveTime += fruit.isBonus() ? moveTime * 0.10f : 0;
+            }
+
             if (fruit.shouldRemove())
                 fruit = null;
         }
@@ -178,16 +212,10 @@ public class PlayState extends GameState {
      * according columns and rows times gridCell dimension.
      */
     private void setupLevel() {
-        level = new Level1();
-
         tempGameWidth = Game.WIDTH;
         tempGameHeight = Game.HEIGHT;
 
-        Game.WIDTH = level.getColumns() * level.getGridCell();
-        Game.HEIGHT = level.getRows() * level.getGridCell();
-
-        Game.camera.position.set(Game.WIDTH / 2, Game.HEIGHT / 2, 0);
-        Game.camera.update();
+        level = new Level1();
     }
 
     @Override
@@ -196,6 +224,9 @@ public class PlayState extends GameState {
         sr.setProjectionMatrix(Game.camera.combined);
         sb.setProjectionMatrix(Game.camera.combined);
 
+        for (Wall pWall : level.getWalls()) {
+            pWall.draw(sr);
+        }
 
         GlyphLayout glyphLayout = new GlyphLayout();
         titleFont = FontManager.INSTANCE.setFont(40, new Color(0, 1, 1, 1));
@@ -228,6 +259,19 @@ public class PlayState extends GameState {
         if (fruit != null)
             fruit.draw(sr);
 
+        if (!playTime) {
+            sb.begin();
+            glyphLayout.setText(font, "Hit space to continue ...");
+            font.draw(sb, glyphLayout, (Game.WIDTH - glyphLayout.width) / 2, Game.HEIGHT / 2);
+            sb.end();
+        }
+
+        new Fruit(0, -25).draw(sr);
+        sb.begin();
+        glyphLayout.setText(font, "x " + (level.fruitToNextLevel() - head.fruitsAte()));
+        font.draw(sb, glyphLayout, 22, -12);
+        sb.end();
+
 
     }
 
@@ -237,7 +281,7 @@ public class PlayState extends GameState {
     private void drawGrid() {
         sr.setProjectionMatrix(Game.camera.combined);
 
-        sr.setColor(0, 0, 0.25f, 0);
+        sr.setColor(0, 0, 0.35f, 1);
         sr.begin(ShapeRenderer.ShapeType.Line);
         for (int i = 0; i <= Game.WIDTH; i += level.getGridCell()) {
             sr.line(i, 0, i, Game.HEIGHT);
@@ -263,6 +307,9 @@ public class PlayState extends GameState {
                 head.setDown(Gdx.input.isKeyJustPressed(Input.Keys.DOWN));
                 break;
         }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+            playTime = !playTime;
 
     }
 
