@@ -10,6 +10,7 @@ import pt.bisonte.snake.entities.PlayerScore;
 import pt.bisonte.snake.managers.FontManager;
 import pt.bisonte.snake.managers.GameFileManager;
 import pt.bisonte.snake.managers.GameStateManager;
+import pt.bisonte.snake.managers.Jukebox;
 
 public class HighScoreState extends GameState {
 
@@ -63,8 +64,8 @@ public class HighScoreState extends GameState {
     @Override
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Keys.ENTER) || Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+            Jukebox.play("accept");
             gameStateManager.setState(GameStateManager.State.MENU);
-
         }
     }
 

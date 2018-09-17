@@ -11,6 +11,7 @@ import pt.bisonte.snake.Game;
 import pt.bisonte.snake.managers.FontManager;
 import pt.bisonte.snake.managers.GameFileManager;
 import pt.bisonte.snake.managers.GameStateManager;
+import pt.bisonte.snake.managers.Jukebox;
 
 public class MenuState extends GameState {
 
@@ -83,14 +84,19 @@ public class MenuState extends GameState {
 
     @Override
     public void handleInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && currentItem > 0)
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && currentItem > 0) {
             currentItem--;
+            Jukebox.play("select");
+        }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && currentItem < menuItems.length - 1)
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && currentItem < menuItems.length - 1) {
             currentItem++;
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
+            Jukebox.play("select");
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             select();
-
+            Jukebox.play("accept");
+        }
     }
 
     @Override

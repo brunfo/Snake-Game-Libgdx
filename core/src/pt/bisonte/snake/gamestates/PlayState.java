@@ -193,12 +193,18 @@ public class PlayState extends GameState {
                     LevelManager.getNextLevel();
                     playTime= !playTime; //pause the game
                     resetBody();
-                    moveTime -= fruit.isBonus() ? 0 : moveTime * 0.10f;
+                    moveTime = 0.25f; // reset speed
+                    Jukebox.play("levelup");
                 }
                 //if fruits is bonus, then the update time increases 10%, decreasing speed.
-                moveTime += fruit.isBonus() ? moveTime * 0.10f : 0;
-
-
+                if(fruit.isBonus()) {
+                    Jukebox.play("bonus");
+                    moveTime += moveTime * 0.10f;
+                }
+                // else, each 5 decrease update time, increasing speed.
+                else if (head.fruitsAte()%5==0){
+                    moveTime += moveTime * -0.10f;
+                }
             }
 
             if (fruit.shouldRemove())

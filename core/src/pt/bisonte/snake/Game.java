@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import pt.bisonte.snake.managers.GameStateManager;
+import pt.bisonte.snake.managers.Jukebox;
 
 public class Game extends ApplicationAdapter {
 
@@ -28,6 +29,7 @@ public class Game extends ApplicationAdapter {
         cameraPosition = camera.position.cpy();
         camera.update();
 
+        loadSounds();
         gameStateManager = new GameStateManager();
     }
 
@@ -50,5 +52,13 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void dispose() {
+    }
+
+    private void loadSounds(){
+        Jukebox.load("sounds/itemback.wav", "select");
+        Jukebox.load("sounds/itempick.wav", "accept");
+        Jukebox.load("sounds/teleport.wav", "levelup");
+        Jukebox.load("sounds/tick.wav", "bonus");
+
     }
 }
