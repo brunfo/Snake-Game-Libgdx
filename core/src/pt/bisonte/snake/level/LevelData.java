@@ -6,12 +6,12 @@ import pt.bisonte.snake.entities.Wall;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LevelData {
-    /**
-     * Serializable identifier version
-     */
-    private static final long serialVersionUID = 201809161049L;
-
+/**
+ * This class serves to load data files of level games, draw new level or replace existing ones.
+ * To replace, simply delete the file of the desired level and place the data in save method.
+ * To add new level, place the data in save method, and play until reach the level that has being setup.
+  */
+class LevelData {
 
     private int rows;
     private int columns;
@@ -23,6 +23,9 @@ public class LevelData {
 
     private List<Wall> walls;
 
+    /**
+     * Method to save and replace level design.
+     */
     void save() {
         rows = 20;
         columns = 20;
@@ -52,6 +55,9 @@ public class LevelData {
 
     }
 
+    /**
+     * Setup board.
+     */
     void init() {
         //setup board
         Game.WIDTH = columns * gridCell;
