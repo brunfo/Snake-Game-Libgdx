@@ -2,6 +2,7 @@ package pt.bisonte.snake.entities;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+
 public class Wall extends GameObject {
 
 
@@ -12,6 +13,8 @@ public class Wall extends GameObject {
 
         setPosition(x, y);
     }
+
+    public Wall(){}
 
     @Override
     public void update(float dt) {

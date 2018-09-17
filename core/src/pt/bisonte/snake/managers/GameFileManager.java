@@ -38,10 +38,7 @@ public class GameFileManager {
             gameData = (GameData) in.readObject();
             in.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            Gdx.app.exit();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             Gdx.app.exit();
         }

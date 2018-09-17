@@ -13,8 +13,7 @@ import pt.bisonte.snake.entities.Fruit;
 import pt.bisonte.snake.entities.Head;
 import pt.bisonte.snake.entities.Tail;
 import pt.bisonte.snake.entities.Wall;
-import pt.bisonte.snake.level.Level;
-import pt.bisonte.snake.level.LevelData;
+import pt.bisonte.snake.level.LevelManager;
 import pt.bisonte.snake.managers.*;
 
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ public class PlayState extends GameState {
     private ShapeRenderer sr;
     private BitmapFont titleFont;
     private BitmapFont font;
-    private LevelData level;
 
     private float tempGameWidth;
     private float tempGameHeight;
@@ -60,7 +58,7 @@ public class PlayState extends GameState {
         moveTimer = 0;
         moveTime = 0.25f;
 
-        head = new Head(Level.MANAGER.getGrid());
+        head = new Head(LevelManager.getGrid());
 
         resetBody();
 
@@ -72,16 +70,16 @@ public class PlayState extends GameState {
     private void resetBody() {
         head.reset();
         head.setPosition(
-                (5 * Level.MANAGER.getGrid()),
-                (5 * Level.MANAGER.getGrid())
+                (5 * LevelManager.getGrid()),
+                (5 * LevelManager.getGrid())
         );
 
-        body = new ArrayList<Tail>();
+        body = new ArrayList<>();
 
         //add 2 body
-        body.add(new Tail(head.getX(), head.getY() - Level.MANAGER.getGrid(), Level.MANAGER.getGrid()));
-        body.add(new Tail(body.get(0).getX(), body.get(0).getY() - Level.MANAGER.getGrid(), Level.MANAGER.getGrid()));
-        body.add(new Tail(body.get(1).getX(), body.get(1).getY() - Level.MANAGER.getGrid(), Level.MANAGER.getGrid()));
+        body.add(new Tail(head.getX(), head.getY() - LevelManager.getGrid(), LevelManager.getGrid()));
+        body.add(new Tail(body.get(0).getX(), body.get(0).getY() - LevelManager.getGrid(), LevelManager.getGrid()));
+        body.add(new Tail(body.get(1).getX(), body.get(1).getY() - LevelManager.getGrid(), LevelManager.getGrid()));
     }
 
     private boolean isPlayTime() {
@@ -111,7 +109,7 @@ public class PlayState extends GameState {
             if (body.size() != 0) {
                 //if player has eat a fruit add a body part
                 if (head.hasEat())
-                    body.add(new Tail(0, 0, Level.MANAGER.getGrid()));
+                    body.add(new Tail(0, 0, LevelManager.getGrid()));
                 //sets new position of body parts
                 for (int i = body.size() - 1; i >= 0; i--) {
                     if (i == 0)
@@ -143,8 +141,8 @@ public class PlayState extends GameState {
             do {
                 //TODO the fruit should not spawn in the same position as any object
                 // first get the position random
-                x = MathUtils.random(Level.MANAGER.getColumns() - 1) * Level.MANAGER.getGrid();
-                y = MathUtils.random(Level.MANAGER.getRows() - 1) * Level.MANAGER.getGrid();
+                x = MathUtils.random(LevelManager.getColumns() - 1) * LevelManager.getGrid();
+                y = MathUtils.random(LevelManager.getRows() - 1) * LevelManager.getGrid();
 
                 // check if space is free
                 containsHead = head.contains(x, y);
@@ -155,7 +153,7 @@ public class PlayState extends GameState {
                         break; //if contains exit for loop
                 }
 
-                for (Wall pWall : Level.MANAGER.getWalls()) {
+                for (Wall pWall : LevelManager.getWalls()) {
                     containsWall = pWall.contains(x, y);
                     if (containsWall)
                         break;
@@ -182,7 +180,7 @@ public class PlayState extends GameState {
         }
 
         //head to walls
-        for (Wall pWall : Level.MANAGER.getWalls()) {
+        for (Wall pWall : LevelManager.getWalls()) {
             if (pWall.contains(head.getX(), head.getY()))
                 head.hit();
         }
@@ -190,12 +188,17 @@ public class PlayState extends GameState {
         //head to fruit
         if (fruit != null) {
             if (head.eat(fruit.contains(head.getX(), head.getY()), fruit.getScore())) {
-                if (head.fruitsAte() >= Level.MANAGER.getFruitToNextLevel()) {
+                if (head.fruitsAte() >= LevelManager.getFruitToNextLevel()) {
                     // if isn't bonus fruit, decreases 10% time to update, increasing speed.
+                    LevelManager.getNextLevel();
+                    playTime= !playTime; //pause the game
+                    resetBody();
                     moveTime -= fruit.isBonus() ? 0 : moveTime * 0.10f;
                 }
                 //if fruits is bonus, then the update time increases 10%, decreasing speed.
                 moveTime += fruit.isBonus() ? moveTime * 0.10f : 0;
+
+
             }
 
             if (fruit.shouldRemove())
@@ -212,7 +215,7 @@ public class PlayState extends GameState {
         tempGameWidth = Game.WIDTH;
         tempGameHeight = Game.HEIGHT;
 
-        level = Level.MANAGER.getNextLevel();
+        LevelManager.getNextLevel();
     }
 
     @Override
@@ -221,7 +224,7 @@ public class PlayState extends GameState {
         sr.setProjectionMatrix(Game.camera.combined);
         sb.setProjectionMatrix(Game.camera.combined);
 
-        for (Wall pWall : Level.MANAGER.getWalls()) {
+        for (Wall pWall : LevelManager.getWalls()) {
             pWall.draw(sr);
         }
 
@@ -237,7 +240,7 @@ public class PlayState extends GameState {
         glyphLayout.setText(font, "Score: " + (int) head.getScore());
         font.draw(sb, glyphLayout, 0, Game.HEIGHT + 15);
 
-        glyphLayout.setText(font, "Level: " + Level.MANAGER.getLevelID());
+        glyphLayout.setText(font, "Level: " + LevelManager.getLevelID());
         font.draw(sb, glyphLayout, Game.WIDTH - glyphLayout.width, -5);
 
         sb.end();
@@ -265,7 +268,7 @@ public class PlayState extends GameState {
 
         new Fruit(0, -25).draw(sr);
         sb.begin();
-        glyphLayout.setText(font, "x " + (Level.MANAGER.getFruitToNextLevel() - head.fruitsAte()));
+        glyphLayout.setText(font, "x " + (LevelManager.getFruitToNextLevel() - head.fruitsAte()));
         font.draw(sb, glyphLayout, 22, -12);
         sb.end();
 
@@ -280,10 +283,10 @@ public class PlayState extends GameState {
 
         sr.setColor(0, 0, 0.35f, 1);
         sr.begin(ShapeRenderer.ShapeType.Line);
-        for (int i = 0; i <= Game.WIDTH; i += Level.MANAGER.getGrid()) {
+        for (int i = 0; i <= Game.WIDTH; i += LevelManager.getGrid()) {
             sr.line(i, 0, i, Game.HEIGHT);
         }
-        for (int i = 0; i <= Game.HEIGHT; i += Level.MANAGER.getGrid()) {
+        for (int i = 0; i <= Game.HEIGHT; i += LevelManager.getGrid()) {
             sr.line(0, i, Game.WIDTH, i);
         }
         sr.end();

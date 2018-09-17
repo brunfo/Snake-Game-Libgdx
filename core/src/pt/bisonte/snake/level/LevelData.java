@@ -7,11 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LevelData {
+    /**
+     * Serializable identifier version
+     */
+    private static final long serialVersionUID = 201809161049L;
 
 
-    private int rows = 15;
-    private int columns = 15;
-    private int gridCell = 15;
+    private int rows;
+    private int columns;
+    private int gridCell;
 
     private int levelID;
 
@@ -19,19 +23,17 @@ public class LevelData {
 
     private List<Wall> walls;
 
-    {
-        levelID = 1;
-        fruitToNextLevel = 30;
+    void save() {
+        rows = 20;
+        columns = 20;
+        gridCell = 15;
+        levelID = 3;
+        fruitToNextLevel = 40;
 
-        //setup board
-        Game.WIDTH = columns * gridCell;
-        Game.HEIGHT = rows * gridCell;
-
-        Game.camera.position.set(Game.WIDTH / 2, Game.HEIGHT / 2, 0);
-        Game.camera.update();
+        init();
 
         // setup walls
-        walls = new ArrayList<Wall>();
+        walls = new ArrayList<>();
         for (int i = gridCell; i < Game.WIDTH - gridCell; i += gridCell) {
             walls.add(new Wall(0, i, gridCell));
             walls.add(new Wall(Game.WIDTH - gridCell, i, gridCell));
@@ -41,30 +43,48 @@ public class LevelData {
             walls.add(new Wall(i, 0, gridCell));
             walls.add(new Wall(i, Game.HEIGHT - gridCell, gridCell));
         }
+
+        for (int i = 4 * gridCell; i < Game.WIDTH - 4 * gridCell; i += gridCell) {
+            walls.add(new Wall(i, 8 * gridCell, gridCell));
+            walls.add(new Wall(i, 12 * gridCell, gridCell));
+        }
+
+
     }
 
-    public int getRows() {
+    void init() {
+        //setup board
+        Game.WIDTH = columns * gridCell;
+        Game.HEIGHT = rows * gridCell;
+
+        Game.camera.position.set(Game.WIDTH / 2, Game.HEIGHT / 2, 0);
+        Game.camera.update();
+    }
+
+    int getRows() {
         return rows;
     }
 
-    public int getColumns() {
+    int getColumns() {
         return columns;
     }
 
-    public int getGridCell() {
+    int getGridCell() {
         return gridCell;
     }
 
-    public int getLevelID() {
+    int getLevelID() {
         return levelID;
     }
 
-    public int getFruitToNextLevel() {
+    int getFruitToNextLevel() {
         return fruitToNextLevel;
     }
 
-    public List<Wall> getWalls() {
+    List<Wall> getWalls() {
         return walls;
     }
+
+
 }
         
