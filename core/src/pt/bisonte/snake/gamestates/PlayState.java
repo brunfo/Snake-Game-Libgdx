@@ -41,6 +41,8 @@ public class PlayState extends GameState {
 
     private boolean playTime;
 
+    private boolean beat1;
+
 
     public PlayState(GameStateManager gameStateManager) {
         super(gameStateManager);
@@ -121,6 +123,13 @@ public class PlayState extends GameState {
             //update head
             head.update(dt);
             head.wrap();
+
+            if(beat1)
+                Jukebox.play("beat1");
+            else
+                Jukebox.play("beat2");
+            beat1=!beat1;
+
 
             if (head.isDead())
                 if (head.getLives() < 0) {

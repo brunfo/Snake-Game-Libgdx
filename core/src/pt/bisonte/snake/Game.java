@@ -57,8 +57,10 @@ public class Game extends ApplicationAdapter {
     private void loadSounds(){
         Jukebox.load("sounds/itemback.wav", "select");
         Jukebox.load("sounds/itempick.wav", "accept");
-        Jukebox.load("sounds/teleport.wav", "levelup");
+        Jukebox.load("sounds/level-up.wav", "levelup");
         Jukebox.load("sounds/tick.wav", "bonus");
+        Jukebox.load("sounds/beat1.wav","beat1");
+        Jukebox.load("sounds/beat2.wav", "beat2");
 
     }
 }
