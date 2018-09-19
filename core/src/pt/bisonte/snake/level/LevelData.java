@@ -10,7 +10,7 @@ import java.util.List;
  * This class serves to load data files of level games, draw new level or replace existing ones.
  * To replace, simply delete the file of the desired level and place the data in save method.
  * To add new level, place the data in save method, and play until reach the level that has being setup.
-  */
+ */
 class LevelData {
 
     private int rows;
@@ -30,29 +30,66 @@ class LevelData {
         rows = 20;
         columns = 20;
         gridCell = 15;
-        levelID = 3;
-        fruitToNextLevel = 40;
+        levelID = 4;
+        fruitToNextLevel = 55;
 
         init();
 
         // setup walls
         walls = new ArrayList<>();
-        for (int i = gridCell; i < Game.WIDTH - gridCell; i += gridCell) {
-            walls.add(new Wall(0, i, gridCell));
-            walls.add(new Wall(Game.WIDTH - gridCell, i, gridCell));
+        //inferior left corner
+        line(0, 0, 0, 6);
+        line(1, 0, 6, 0);
+
+        //inferior right corner
+        line(13, 0, 19, 0);
+        line(19, 1, 19, 6);
+
+        //superior right corner
+        line(19, 13, 19, 19);
+        line(13, 19, 18, 19);
+
+        //superior left corner
+        line(0, 19, 6, 19);
+        line(0, 13, 0, 18);
+
+        //right barrier
+        line(4,5,4,14);
+        //left barrier
+        line(15,5,15,14);
+
+
+    }
+
+    /**
+     * Adds a sets of walls in a direction x (columns) or y (rows).
+     * Only allows vertical or horizontal sequences.
+     * @param x1 - Coordinate
+     * @param y1 - Coordinate
+     * @param x2 - Coordinate
+     * @param y2 - Coordinate
+     * @return true or false
+     */
+    private boolean line(int x1, int y1, int x2, int y2) {
+
+        int dx = x1 - x2;
+        int dy = y1 - y2;
+        //distance between to points
+        float distance = (float) Math.sqrt(dx * dx + dy * dy);
+        //the distance between the two points must be different then zero, and dx or dy must be zero.
+        if (distance == 0 || dx != 0 && dy != 0)
+            return false;
+
+        for (int i = (dx == 0 ? y1 : x1);
+             i <= (dx == 0 ? y2 : x2);
+             i++) {
+            walls.add(new Wall(
+                    (dx == 0 ? x1 : i) * gridCell,
+                    (dy == 0 ? y1 : i) * gridCell,
+                    gridCell));
         }
 
-        for (int i = 0; i < Game.HEIGHT; i += gridCell) {
-            walls.add(new Wall(i, 0, gridCell));
-            walls.add(new Wall(i, Game.HEIGHT - gridCell, gridCell));
-        }
-
-        for (int i = 4 * gridCell; i < Game.WIDTH - 4 * gridCell; i += gridCell) {
-            walls.add(new Wall(i, 8 * gridCell, gridCell));
-            walls.add(new Wall(i, 12 * gridCell, gridCell));
-        }
-
-
+        return true;
     }
 
     /**

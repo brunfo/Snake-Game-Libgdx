@@ -216,7 +216,7 @@ public class PlayState extends GameState {
                 }
             }
 
-            if (fruit.shouldRemove())
+            if (fruit.shouldRemove() || head.isDead())
                 fruit = null;
         }
 
@@ -309,20 +309,21 @@ public class PlayState extends GameState {
 
     @Override
     public void handleInput() {
-        //user preferences input keys
-        switch (GameStateManager.optionKeys) {
-            case SNAKE://snake perspective
-                head.setRotateLeft(Gdx.input.isKeyJustPressed(Input.Keys.LEFT));
-                head.setRotateRight(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT));
-                break;
-            case PLAYER: //player perspective
-                head.setLeft(Gdx.input.isKeyJustPressed(Input.Keys.LEFT));
-                head.setRight(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT));
-                head.setUp(Gdx.input.isKeyJustPressed(Input.Keys.UP));
-                head.setDown(Gdx.input.isKeyJustPressed(Input.Keys.DOWN));
-                break;
+        if(isPlayTime()) {
+            //user preferences input keys
+            switch (GameStateManager.optionKeys) {
+                case SNAKE://snake perspective
+                    head.setRotateLeft(Gdx.input.isKeyJustPressed(Input.Keys.LEFT));
+                    head.setRotateRight(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT));
+                    break;
+                case PLAYER: //player perspective
+                    head.setLeft(Gdx.input.isKeyJustPressed(Input.Keys.LEFT));
+                    head.setRight(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT));
+                    head.setUp(Gdx.input.isKeyJustPressed(Input.Keys.UP));
+                    head.setDown(Gdx.input.isKeyJustPressed(Input.Keys.DOWN));
+                    break;
+            }
         }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
             playTime = !playTime;
 
