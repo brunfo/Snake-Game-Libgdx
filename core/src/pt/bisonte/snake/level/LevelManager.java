@@ -13,10 +13,16 @@ import java.util.List;
  */
 public class LevelManager {
 
+    private static boolean drawLevel=false;
 
     private static LevelData level;
 
     public static void getNextLevel() {
+
+        //alter drawLevel to test new or replaced level.
+        if(drawLevel)
+            load("level4.dat");
+
         String filename;
         if (level == null)
             filename = "level1.dat";
