@@ -9,12 +9,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import pt.bisonte.snake.Game;
-import pt.bisonte.snake.entities.Fruit;
-import pt.bisonte.snake.entities.Head;
+import pt.bisonte.snake.entities.Apple;
+import pt.bisonte.snake.entities.Player;
 import pt.bisonte.snake.entities.Tail;
 import pt.bisonte.snake.entities.Wall;
 import pt.bisonte.snake.level.LevelManager;
-import pt.bisonte.snake.managers.*;
+import pt.bisonte.snake.managers.FontManager;
+import pt.bisonte.snake.managers.GameFileManager;
+import pt.bisonte.snake.managers.GameStateManager;
+import pt.bisonte.snake.managers.Jukebox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +34,13 @@ public class PlayState extends GameState {
     private float tempGameHeight;
 
 
-    private Head head;
+    private Player player;
     private List<Tail> body;
-    private Fruit fruit;
+    private Apple apple;
+
+    //remaning lives and apples
+    private List<Player> extraLives;
+    private Apple remaningApples;
 
 
     private float moveTimer;
@@ -60,7 +67,15 @@ public class PlayState extends GameState {
         moveTimer = 0;
         moveTime = 0.25f;
 
-        head = new Head(LevelManager.getGrid());
+        player = new Player(LevelManager.getGrid());
+
+        extraLives = new ArrayList<>();
+        remaningApples = new Apple(0, -25, false);
+
+        for (int i = 0; i < player.getLives(); i++) {
+            Player newLive = new Player(15);
+            extraLives.add(newLive);
+        }
 
         resetBody();
 
@@ -70,8 +85,8 @@ public class PlayState extends GameState {
      * Resets the snake position.
      */
     private void resetBody() {
-        head.reset();
-        head.setPosition(
+        player.reset();
+        player.setPosition(
                 (5 * LevelManager.getGrid()),
                 (5 * LevelManager.getGrid())
         );
@@ -79,7 +94,7 @@ public class PlayState extends GameState {
         body = new ArrayList<>();
 
         //add 2 body
-        body.add(new Tail(head.getX(), head.getY() - LevelManager.getGrid(), LevelManager.getGrid()));
+        body.add(new Tail(player.getX(), player.getY() - LevelManager.getGrid(), LevelManager.getGrid()));
         body.add(new Tail(body.get(0).getX(), body.get(0).getY() - LevelManager.getGrid(), LevelManager.getGrid()));
         body.add(new Tail(body.get(1).getX(), body.get(1).getY() - LevelManager.getGrid(), LevelManager.getGrid()));
     }
@@ -92,7 +107,6 @@ public class PlayState extends GameState {
     public void update(float dt) {
         //get user input
         handleInput();
-
 
         moveTimer += dt;
 
@@ -109,31 +123,31 @@ public class PlayState extends GameState {
 
             //update body position
             if (body.size() != 0) {
-                //if player has eat a fruit add a body part
-                if (head.hasEat())
+                //if player has eat a apple add a body part
+                if (player.hasEat())
                     body.add(new Tail(0, 0, LevelManager.getGrid()));
                 //sets new position of body parts
                 for (int i = body.size() - 1; i >= 0; i--) {
                     if (i == 0)
-                        body.get(i).setPosition(head.getX(), head.getY());
+                        body.get(i).setPosition(player.getX(), player.getY());
                     else
                         body.get(i).setPosition(body.get(i - 1).getX(), body.get(i - 1).getY());
                 }
             }
-            //update head
-            head.update(dt);
-            head.wrap();
+            //update player
+            player.update(dt);
+            player.wrap();
 
-            if(beat1)
+            if (beat1)
                 Jukebox.play("beat1");
             else
                 Jukebox.play("beat2");
-            beat1=!beat1;
+            beat1 = !beat1;
 
 
-            if (head.isDead())
-                if (head.getLives() < 0) {
-                    GameFileManager.gameData.setTentativeScore((long) head.getScore());
+            if (player.isDead())
+                if (player.getLives() < 0) {
+                    GameFileManager.gameData.setTentativeScore((long) player.getScore());
                     gameStateManager.setState(GameStateManager.State.GAMEOVER);
                 } else {
                     resetBody();
@@ -142,19 +156,18 @@ public class PlayState extends GameState {
 
 
         }
-        //create fruit
-        if (fruit == null) {
+        //create apple
+        if (apple == null) {
             float x;
             float y;
             boolean containsHead, containsFruit = false, containsWall = false;
             do {
-                //TODO the fruit should not spawn in the same position as any object
                 // first get the position random
                 x = MathUtils.random(LevelManager.getColumns() - 1) * LevelManager.getGrid();
                 y = MathUtils.random(LevelManager.getRows() - 1) * LevelManager.getGrid();
 
                 // check if space is free
-                containsHead = head.contains(x, y);
+                containsHead = player.contains(x, y);
 
                 for (Tail bodyPart : body) {
                     containsFruit = bodyPart.contains(x, y);
@@ -170,11 +183,11 @@ public class PlayState extends GameState {
 
             } while (containsHead || containsFruit || containsWall);
 
-            fruit = new Fruit(x, y);
+            apple = new Apple(x, y);
         } else {
-            fruit.update(dt);
-            if (fruit.shouldRemove())
-                fruit = null;
+            apple.update(dt);
+            if (apple.shouldRemove())
+                apple = null;
         }
     }
 
@@ -182,43 +195,46 @@ public class PlayState extends GameState {
      * Check collision point to point intersection
      */
     private void checkCollision() {
-        //head to tail
+        //player to tail
         for (Tail bodyPart : body) {
-            if (bodyPart.contains(head.getX(), head.getY()))
-                head.hit();
+            if (bodyPart.contains(player.getX(), player.getY()))
+                player.hit();
         }
 
-        //head to walls
+        //player to walls
         for (Wall pWall : LevelManager.getWalls()) {
-            if (pWall.contains(head.getX(), head.getY()))
-                head.hit();
+            if (pWall.contains(player.getX(), player.getY())) {
+                player.hit();
+            }
         }
 
-        //head to fruit
-        if (fruit != null) {
-            if (head.eat(fruit.contains(head.getX(), head.getY()), fruit.getScore())) {
-                if (head.fruitsAte() >= LevelManager.getFruitToNextLevel()) {
-                    // if isn't bonus fruit, decreases 10% time to update, increasing speed.
+        //player to apple
+        if (apple != null) {
+            if (player.eat(apple.contains(player.getX(), player.getY()), apple.getScore())) {
+                if (player.fruitsAte() >= LevelManager.getFruitToNextLevel()) {
+                    // if isn't bonus apple, decreases 10% time to update, increasing speed.
                     LevelManager.getNextLevel();
-                    playTime= !playTime; //pause the game
+                    playTime = !playTime; //pause the game
                     resetBody();
                     moveTime = 0.25f; // reset speed
                     Jukebox.play("levelup");
                 }
                 //if fruits is bonus, then the update time increases 10%, decreasing speed.
-                if(fruit.isBonus()) {
+                if (apple.isBonus()) {
                     Jukebox.play("bonus");
                     moveTime += moveTime * 0.10f;
                 }
                 // else, each 5 decrease update time, increasing speed.
-                else if (head.fruitsAte()%5==0){
+                else if (player.fruitsAte() % 5 == 0) {
                     moveTime += moveTime * -0.10f;
                 }
             }
 
-            if (fruit.shouldRemove() || head.isDead())
-                fruit = null;
+            if (apple.shouldRemove() || player.isDead())
+                apple = null;
         }
+
+        updateExtraLives();
 
     }
 
@@ -233,11 +249,28 @@ public class PlayState extends GameState {
         LevelManager.getNextLevel();
     }
 
+
+    /**
+     * Updates the extra lives to the display
+     */
+    private void updateExtraLives() {
+        if (player.isDead() && extraLives.size() > 0) {
+            extraLives.remove(extraLives.size() - 1);
+        }
+
+        //updates the position whatever the board size
+        int i = 0;
+        for (Player extraLive : extraLives) {
+            extraLive.setPosition(Game.WIDTH - 15 - i++ * 20, Game.HEIGHT + 5);
+        }
+    }
+
     @Override
     public void draw() {
         drawGrid();
         sr.setProjectionMatrix(Game.camera.combined);
         sb.setProjectionMatrix(Game.camera.combined);
+
 
         for (Wall pWall : LevelManager.getWalls()) {
             pWall.draw(sr);
@@ -252,7 +285,7 @@ public class PlayState extends GameState {
         glyphLayout.setText(titleFont, MenuState.title);
         titleFont.draw(sb, glyphLayout, (Game.WIDTH - glyphLayout.width) / 2, Game.HEIGHT + 60);
 
-        glyphLayout.setText(font, "Score: " + (int) head.getScore());
+        glyphLayout.setText(font, "Score: " + (int) player.getScore());
         font.draw(sb, glyphLayout, 0, Game.HEIGHT + 15);
 
         glyphLayout.setText(font, "Level: " + LevelManager.getLevelID());
@@ -260,19 +293,18 @@ public class PlayState extends GameState {
 
         sb.end();
 
-        for (int i = 0; i < head.getLives(); i++) {
-            new Head(15).setPosition(Game.WIDTH - 15 - i * 20, Game.HEIGHT + 5).draw(sr);
+        for (Player extraLive : extraLives) {
+            extraLive.draw(sr);
         }
 
-
-        head.draw(sr);
+        player.draw(sr);
 
         //draw body
         for (Tail bodyPart : body) {
             bodyPart.draw(sr);
         }
-        if (fruit != null)
-            fruit.draw(sr);
+        if (apple != null)
+            apple.draw(sr);
 
         if (!playTime) {
             sb.begin();
@@ -281,9 +313,10 @@ public class PlayState extends GameState {
             sb.end();
         }
 
-        new Fruit(0, -25).draw(sr);
+        remaningApples.draw(sr);
+
         sb.begin();
-        glyphLayout.setText(font, "x " + (LevelManager.getFruitToNextLevel() - head.fruitsAte()));
+        glyphLayout.setText(font, "x " + (LevelManager.getFruitToNextLevel() - player.fruitsAte()));
         font.draw(sb, glyphLayout, 22, -12);
         sb.end();
 
@@ -309,18 +342,18 @@ public class PlayState extends GameState {
 
     @Override
     public void handleInput() {
-        if(isPlayTime()) {
+        if (isPlayTime()) {
             //user preferences input keys
             switch (GameStateManager.optionKeys) {
                 case SNAKE://snake perspective
-                    head.setRotateLeft(Gdx.input.isKeyJustPressed(Input.Keys.LEFT));
-                    head.setRotateRight(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT));
+                    player.setRotateLeft(Gdx.input.isKeyJustPressed(Input.Keys.LEFT));
+                    player.setRotateRight(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT));
                     break;
                 case PLAYER: //player perspective
-                    head.setLeft(Gdx.input.isKeyJustPressed(Input.Keys.LEFT));
-                    head.setRight(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT));
-                    head.setUp(Gdx.input.isKeyJustPressed(Input.Keys.UP));
-                    head.setDown(Gdx.input.isKeyJustPressed(Input.Keys.DOWN));
+                    player.setLeft(Gdx.input.isKeyJustPressed(Input.Keys.LEFT));
+                    player.setRight(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT));
+                    player.setUp(Gdx.input.isKeyJustPressed(Input.Keys.UP));
+                    player.setDown(Gdx.input.isKeyJustPressed(Input.Keys.DOWN));
                     break;
             }
         }

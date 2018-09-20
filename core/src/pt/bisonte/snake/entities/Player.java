@@ -2,7 +2,7 @@ package pt.bisonte.snake.entities;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-public class Head extends GameObject {
+public class Player extends GameObject {
 
     private enum Facing {
         UP, DOWN, LEFT, RIGHT
@@ -25,9 +25,9 @@ public class Head extends GameObject {
 
 
     /**
-     * Constructor for the head.
+     * Constructor for the player.
      */
-    public Head(int size) {
+    public Player(int size) {
 
         //set WIDTH and HEIGHT
         width = height = size;
@@ -52,7 +52,7 @@ public class Head extends GameObject {
     }
 
     /**
-     * Signs head to rotate left. Receives a boolean parameter from Game input keys.
+     * Signs player to rotate left. Receives a boolean parameter from Game input keys.
      * It only sets turn if turning is not set already
      *
      * @param rotateLeft - true or false.
@@ -66,7 +66,7 @@ public class Head extends GameObject {
     }
 
     /**
-     * Signs head to rotate right. Receives a boolean parameter from Game input keys.
+     * Signs player to rotate right. Receives a boolean parameter from Game input keys.
      * It only sets turn if turning is not set already
      *
      * @param rotateRight - true or false.
@@ -217,7 +217,7 @@ public class Head extends GameObject {
     }
 
     /**
-     * Updates the head, positioning, facing angle, etc.
+     * Updates the player, positioning, facing angle, etc.
      *
      * @param dt - game timer
      */

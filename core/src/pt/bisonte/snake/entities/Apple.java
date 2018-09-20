@@ -3,16 +3,16 @@ package pt.bisonte.snake.entities;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 
-public class Fruit extends GameObject {
+public class Apple extends GameObject {
 
     private float removeTimer;
     private float removeTime;
     private boolean remove;
     private int score;
-    private boolean bonusFruit; //this fruit decrease speed of the game by 10%
+    private boolean bonusApple; //this fruit decrease speed of the game by 10%
 
 
-    public Fruit(float x, float y) {
+    public Apple(float x, float y) {
         setPosition(x, y);
         getRandomFruit();
         removeTimer = 0;
@@ -22,7 +22,12 @@ public class Fruit extends GameObject {
         width = height = 15;
 
         //sets the score, if bonus fruit it adds 100 points, else 10 points.
-        score = bonusFruit ? 100 : 10;
+        score = bonusApple ? 100 : 10;
+    }
+
+    public Apple(float x, float y, boolean bonus){
+        this(x,y);
+        this.bonusApple= bonus;
     }
 
     /**
@@ -59,7 +64,7 @@ public class Fruit extends GameObject {
      * Randoms a bonus fruit width a chance of 10%.
      */
     private void getRandomFruit() {
-        bonusFruit = MathUtils.random(10) < 1;
+        bonusApple = MathUtils.random(10) < 1;
     }
 
     /**
@@ -68,7 +73,7 @@ public class Fruit extends GameObject {
      * @return - true or false.
      */
     public boolean isBonus() {
-        return bonusFruit;
+        return bonusApple;
     }
 
     @Override
@@ -83,22 +88,19 @@ public class Fruit extends GameObject {
 
     @Override
     public void draw(ShapeRenderer sr) {
-        sr.setColor(0.55f, 0, 0, 1);
-        sr.begin(ShapeRenderer.ShapeType.Filled);
-        sr.rect(x, y, width, height);
-        sr.end();
 
         sr.setColor(1, 0, 0, 1);
-        sr.begin(ShapeRenderer.ShapeType.Line);
-        sr.rect(x, y, width, height);
+        if (bonusApple)
+            sr.setColor(255,255,0, 0);
+
+        sr.begin(ShapeRenderer.ShapeType.Filled);
+        sr.ellipse(x + width / 4, y, width / 2, height * 4 / 6);
+        sr.ellipse(x + 2f * (width / 4), y, width / 2, height * 4 / 6);
+        sr.setColor(0, 0.55f, 0, 1);
+        sr.ellipse(x + width / 6, y + height / 2, width / 2, height * 2 / 6);
+        sr.setColor(1, 1, 1, 1);
         sr.end();
 
-        if (bonusFruit) {
-            sr.setColor(255, 0, 128, 0);
-            sr.begin(ShapeRenderer.ShapeType.Filled);
-            sr.rect(x + 3, y + 3, width - 6, height - 6);
-            sr.end();
-        }
 
     }
 }
