@@ -21,7 +21,7 @@ public class LevelManager {
 
         //alter drawLevel to test new or replaced level.
         if(drawLevel)
-            load("level4.dat");
+            load("level5.dat");
 
         String filename;
         if (level == null)

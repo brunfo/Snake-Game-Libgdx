@@ -30,33 +30,25 @@ class LevelData {
         rows = 20;
         columns = 20;
         gridCell = 15;
-        levelID = 4;
-        fruitToNextLevel = 55;
+        levelID = 5;
+        fruitToNextLevel = 70;
 
         init();
 
         // setup walls
         walls = new ArrayList<>();
         //inferior left corner
-        line(0, 0, 0, 6);
-        line(1, 0, 6, 0);
+        line(1, 14, 6, 14);
+        line(10, 1, 10, 6);
+        line(7, 10, 18, 10);
+        line(12, 10, 12, 15);
 
-        //inferior right corner
-        line(13, 0, 19, 0);
-        line(19, 1, 19, 6);
+        line(0,0,19,0);
+        line(19,1,19,19);
+        line(0,19,18,19);
+        line(0,1,0,18);
 
-        //superior right corner
-        line(19, 13, 19, 19);
-        line(13, 19, 18, 19);
 
-        //superior left corner
-        line(0, 19, 6, 19);
-        line(0, 13, 0, 18);
-
-        //right barrier
-        line(4,5,4,14);
-        //left barrier
-        line(15,5,15,14);
 
 
     }
