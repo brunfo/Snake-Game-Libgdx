@@ -2,10 +2,13 @@ package pt.bisonte.snake.level;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import pt.bisonte.snake.entities.Wall;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,18 +20,20 @@ public class LevelManager {
 
     private static LevelData level;
 
+    private static  List<String> levels;
+
     public static void getNextLevel() {
 
         //alter drawLevel to test new or replaced level.
         if(drawLevel)
-            load("level5.dat");
+            loadLevel("levels/level6.dat");
 
         String filename;
         if (level == null)
-            filename = "level1.dat";
+            filename = "levels/level1.dat";
         else
-            filename="level" + (getLevelID()+1) + ".dat";
-        load(filename);
+            filename="levels/level" + (getLevelID()+1) + ".dat";
+        loadLevel(filename);
     }
 
     /**
@@ -75,7 +80,7 @@ public class LevelManager {
             json.setElementType(LevelData.class, "walls", Wall.class);
 
             //preparing file and outputstream
-            FileOutputStream fileOut= new FileOutputStream("level" + getLevelID() + ".dat");
+            FileOutputStream fileOut= new FileOutputStream("levels/level" + getLevelID() + ".dat");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
 
             //writing
@@ -95,7 +100,7 @@ public class LevelManager {
     /**
      * Loads file width saved high scores.
      */
-    private static void load(String filename) {
+    private static void loadLevel(String filename) {
         try {
             if (!saveFileExists(filename)) {
                // if (level==null)
@@ -121,6 +126,16 @@ public class LevelManager {
             Gdx.app.exit();
         }
         level.init();
+
+    }
+
+    /**
+     * Loads a preselected level
+     * @param filename - file of the preselected level
+     */
+    public static void load(String filename){
+        drawLevel=true;
+        loadLevel(filename);
     }
 
     /**
@@ -131,6 +146,28 @@ public class LevelManager {
     private static boolean saveFileExists(String filename) {
         File f = new File(filename);
         return f.exists();
+    }
+
+    public static String getLevel(int currentLevel) {
+        return levels.get(currentLevel);
+    }
+
+    public static List<String> getLevels() {
+        return levels;
+    }
+
+    /**
+     * Lists all levels available. Checks all files that are inside directory levels.
+     */
+    public static List listAll() {
+        levels = new ArrayList<>();
+        levels.clear();
+        FileHandle[] files = Gdx.files.local("levels/").list();
+        for (FileHandle file : files) {
+            levels.add(file.name());
+        }
+        Collections.sort(levels);
+        return levels;
     }
 
 

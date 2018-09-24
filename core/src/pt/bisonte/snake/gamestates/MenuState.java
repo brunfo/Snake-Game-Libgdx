@@ -40,7 +40,7 @@ public class MenuState extends GameState {
 
         font = FontManager.INSTANCE.setFont(20);
 
-        menuItems = new String[]{"Play", "Highscores", "Quit"};
+        menuItems = new String[]{"Play", "Highscores", "Level Editor", "Quit"};
 
         GameFileManager.load();
 
@@ -97,6 +97,11 @@ public class MenuState extends GameState {
             select();
             Jukebox.play("accept");
         }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            currentItem=3;
+            select();
+        }
     }
 
     @Override
@@ -117,6 +122,9 @@ public class MenuState extends GameState {
                 gameStateManager.setState(GameStateManager.State.HIGHSCORES);
                 break;
             case 2:
+                gameStateManager.setState(GameStateManager.State.EDITOR);
+                break;
+            case 3:
                 Gdx.app.exit();
                 break;
         }

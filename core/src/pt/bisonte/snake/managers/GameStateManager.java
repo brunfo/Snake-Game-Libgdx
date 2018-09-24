@@ -12,7 +12,7 @@ public class GameStateManager {
      * States of the game.
      */
     public enum State {
-        MENU, PLAY, HIGHSCORES, GAMEOVER
+        MENU, PLAY, HIGHSCORES, GAMEOVER, EDITOR;
     }
 
     /**
@@ -33,28 +33,29 @@ public class GameStateManager {
     /**
      * Sets new game state.
      *
-     * @param state - MENU, PLAY, HIGHSCORES, GAMEOVER.
+     * @param state - MENU, PLAY, HIGHSCORES, GAMEOVER, EDITOR.
      */
     public void setState(State state) {
         if (gameState != null) {
             gameState.dispose();
         }
 
+        Game.setCameraPosition();
         switch (state) {
+
             case MENU:
-                Game.setCameraPosition();
                 gameState = new MenuState(this);
                 break;
             case PLAY:
-                Game.setCameraPosition();
                 gameState = new PlayState(this);
                 break;
             case HIGHSCORES:
-                Game.setCameraPosition();
                 gameState = new HighScoreState(this);
                 break;
+            case EDITOR:
+                gameState = new EditLevelState(this);
+                break;
             case GAMEOVER:
-                Game.setCameraPosition();
                 gameState = new GameOverState(this);
                 break;
         }

@@ -11,7 +11,7 @@ import java.util.List;
  * To replace, simply delete the file of the desired level and place the data in save method.
  * To add new level, place the data in save method, and play until reach the level that has being setup.
  */
-class LevelData {
+public class LevelData {
 
     private int rows;
     private int columns;
@@ -23,6 +23,16 @@ class LevelData {
 
     private List<Wall> walls;
 
+    LevelData(){}
+
+    LevelData(int rows, int columns, int levelID, int fruitToNextLevel){
+        this.rows= rows;
+        this.columns=columns;
+        this.levelID = levelID;
+        this.fruitToNextLevel = fruitToNextLevel;
+        init();
+    }
+
     /**
      * Method to save and replace level design.
      */
@@ -30,23 +40,19 @@ class LevelData {
         rows = 20;
         columns = 20;
         gridCell = 15;
-        levelID = 5;
-        fruitToNextLevel = 70;
+        levelID = 6;
+        fruitToNextLevel = 90;
 
         init();
 
         // setup walls
         walls = new ArrayList<>();
-        //inferior left corner
-        line(1, 14, 6, 14);
-        line(10, 1, 10, 6);
-        line(7, 10, 18, 10);
-        line(12, 10, 12, 15);
+        line(0, 0, 0, 5);
+        line(1, 5, 4, 5);
+        line(4, 6, 4, 12);
+        line(3, 12, 0, 12);
+        //line(0, 13, 0, 19);
 
-        line(0,0,19,0);
-        line(19,1,19,19);
-        line(0,19,18,19);
-        line(0,1,0,18);
 
 
 
