@@ -14,10 +14,7 @@ import pt.bisonte.snake.entities.Player;
 import pt.bisonte.snake.entities.Tail;
 import pt.bisonte.snake.entities.Wall;
 import pt.bisonte.snake.level.LevelManager;
-import pt.bisonte.snake.managers.FontManager;
-import pt.bisonte.snake.managers.GameFileManager;
-import pt.bisonte.snake.managers.GameStateManager;
-import pt.bisonte.snake.managers.Jukebox;
+import pt.bisonte.snake.managers.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +44,7 @@ public class PlayState extends GameState {
     private float moveTime; //move every x second
 
     private boolean playTime;
+    private boolean exitMessage;
 
     private boolean beat1;
 
@@ -276,22 +274,23 @@ public class PlayState extends GameState {
             pWall.draw(sr);
         }
 
-        GlyphLayout glyphLayout = new GlyphLayout();
-        titleFont = FontManager.INSTANCE.setFont(40, new Color(0, 1, 1, 1));
-        font = FontManager.INSTANCE.setFont(15);
+        titleFont = FontManager.setFont(30, new Color(0, 1, 1, 1));
+        font = FontManager.setFont(15);
 
-        sb.begin();
-        // Set text and font each time you want to calculate bounds.
-        glyphLayout.setText(titleFont, MenuState.title);
-        titleFont.draw(sb, glyphLayout, (Game.WIDTH - glyphLayout.width) / 2, Game.HEIGHT + 60);
+        FontManager.centered(sb, titleFont,
+                MenuState.title,
+                Game.WIDTH  / 2,
+                Game.HEIGHT + 80);
 
-        glyphLayout.setText(font, "Score: " + (int) player.getScore());
-        font.draw(sb, glyphLayout, 0, Game.HEIGHT + 15);
+        FontManager.left(sb, font,
+                "Score: " + (int) player.getScore(),
+                0,
+                Game.HEIGHT + 20);
 
-        glyphLayout.setText(font, "Level: " + LevelManager.getLevelID());
-        font.draw(sb, glyphLayout, Game.WIDTH - glyphLayout.width, -5);
-
-        sb.end();
+        FontManager.right(sb, font,
+                "Level: " + LevelManager.getLevelID(),
+                Game.WIDTH,
+                -12);
 
         for (Player extraLive : extraLives) {
             extraLive.draw(sr);
@@ -306,22 +305,37 @@ public class PlayState extends GameState {
         if (apple != null)
             apple.draw(sr);
 
-        if (!playTime) {
-            sb.begin();
-            glyphLayout.setText(font, "Hit space to continue ...");
-            font.draw(sb, glyphLayout, (Game.WIDTH - glyphLayout.width) / 2, Game.HEIGHT / 2);
-            sb.end();
+        if (!playTime && !exitMessage) {
+            FontManager.centered(sb, font,
+                    "Hit space to continue ...",
+                    Game.WIDTH / 2,
+                    Game.HEIGHT / 2);
+        }
+
+        if (exitMessage) {
+            FontManager.centered(sb, font,
+                    "Are you sure you want",
+                    Game.WIDTH/2,
+                    Game.HEIGHT / 2 + 20);
+            FontManager.centered(sb, font,
+                    "to quit the game?",
+                    Game.WIDTH/2,
+                    Game.HEIGHT / 2);
+            FontManager.centered(sb, font,
+                    "(Y to exit)",
+                    Game.WIDTH /2,
+                    Game.HEIGHT / 2 - 20);
         }
 
         remaningApples.draw(sr);
 
-        sb.begin();
-        glyphLayout.setText(font, "x " + (LevelManager.getFruitToNextLevel() - player.fruitsAte()));
-        font.draw(sb, glyphLayout, 22, -12);
-        sb.end();
-
+        FontManager.left(sb, font,
+                "x " + (LevelManager.getFruitToNextLevel() - player.fruitsAte()),
+                22,
+                -12);
 
     }
+
 
     /**
      * Draws a grid of the board.
@@ -359,6 +373,10 @@ public class PlayState extends GameState {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
             playTime = !playTime;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && playTime) {
+            playTime = !playTime;
+            exitMessage = !exitMessage;
+        }
 
     }
 

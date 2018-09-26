@@ -41,8 +41,8 @@ public class GameOverState extends GameState {
             newName = new char[]{'A', 'A', 'A'};
             currentChar = 0;
         }
-        gameOverFont = FontManager.INSTANCE.setFont(32);
-        font = FontManager.INSTANCE.setFont(20);
+        gameOverFont = FontManager.setFont(32);
+        font = FontManager.setFont(20);
 
     }
 
@@ -55,32 +55,34 @@ public class GameOverState extends GameState {
     @Override
     public void draw() {
         spriteBatch.setProjectionMatrix(Game.camera.combined);
-        spriteBatch.begin();
 
-        GlyphLayout glyphLayout = new GlyphLayout();
-
-        // Set text and font each time you want to calculate bounds.
-        glyphLayout.setText(gameOverFont, "Game Over");
-        gameOverFont.draw(spriteBatch, glyphLayout, (Game.WIDTH - glyphLayout.width) / 2, 300);
+        FontManager.centered(spriteBatch, gameOverFont, "Game Over", Game.WIDTH / 2, 300);
 
         if (!newHighScore) {
             spriteBatch.end();
             return;
         }
 
-        glyphLayout.setText(font, "New High Score: " + GameFileManager.gameData.getTentativeScore());
-        font.draw(spriteBatch, glyphLayout, (Game.WIDTH - glyphLayout.width) / 2, 200);
+        String str = "New High Score: " + GameFileManager.gameData.getTentativeScore();
+        FontManager.centered(spriteBatch, font, str, Game.WIDTH / 2, 200);
 
-        glyphLayout.setText(font, "AAA");
+        GlyphLayout layout = new GlyphLayout();
+        layout.setText(font, "AAA");
+
+        spriteBatch.begin();
         for (int i = 0; i < newName.length; i++) {
-            font.draw(spriteBatch, Character.toString(newName[i]), (Game.WIDTH - glyphLayout.width) / 2 + 14 * i, 150);
+            font.draw(spriteBatch, Character.toString(newName[i]),
+                    (Game.WIDTH - layout.width) / 2 + 14 * i,
+                    150);
         }
         spriteBatch.end();
 
         shapeRenderer.begin(ShapeType.Line);
-        shapeRenderer.line(Game.WIDTH / 2 - glyphLayout.width / 2 + 14 * currentChar, 125,
-                Game.WIDTH / 2 - glyphLayout.width / 2 + 10 + 14 * currentChar, 125);
-
+        shapeRenderer.line(
+                Game.WIDTH / 2 - layout.width / 2 + 14 * currentChar,
+                125,
+                Game.WIDTH / 2 - layout.width / 2 + 10 + 14 * currentChar,
+                125);
         shapeRenderer.end();
 
     }

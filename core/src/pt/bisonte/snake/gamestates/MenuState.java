@@ -8,10 +8,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import pt.bisonte.snake.Game;
-import pt.bisonte.snake.managers.FontManager;
-import pt.bisonte.snake.managers.GameFileManager;
-import pt.bisonte.snake.managers.GameStateManager;
-import pt.bisonte.snake.managers.Jukebox;
+import pt.bisonte.snake.managers.*;
 
 public class MenuState extends GameState {
 
@@ -35,10 +32,10 @@ public class MenuState extends GameState {
         shapeRenderer = new ShapeRenderer();
 
         // set font
-        titleFont = FontManager.INSTANCE.setFont(36);
+        titleFont = FontManager.setFont(36);
         titleFont.setColor(Color.WHITE);
 
-        font = FontManager.INSTANCE.setFont(20);
+        font = FontManager.setFont(20);
 
         menuItems = new String[]{"Play", "Highscores", "Quit"};
 
@@ -57,13 +54,7 @@ public class MenuState extends GameState {
         spriteBatch.setProjectionMatrix(Game.camera.combined);
         shapeRenderer.setProjectionMatrix(Game.camera.combined);
 
-
-        spriteBatch.begin();
-        GlyphLayout glyphLayout = new GlyphLayout();
-
-        // Set text and font each time you want to calculate bounds.
-        glyphLayout.setText(titleFont, title);
-        titleFont.draw(spriteBatch, glyphLayout, (Game.WIDTH - glyphLayout.width) / 2, Game.HEIGHT - 50);
+        FontManager.centered(spriteBatch,titleFont, title, Game.WIDTH  / 2, Game.HEIGHT - 50);
 
         float row = Game.HEIGHT - 150;
 
@@ -74,11 +65,8 @@ public class MenuState extends GameState {
                 font.setColor(Color.RED);
             else
                 font.setColor(Color.WHITE);
-            glyphLayout.setText(font, menuItems[i]);
-            font.draw(spriteBatch, glyphLayout, (Game.WIDTH - glyphLayout.width) / 2, row);
+            FontManager.centered(spriteBatch, font,menuItems[i] ,Game.WIDTH  / 2, row);
         }
-
-        spriteBatch.end();
 
     }
 
