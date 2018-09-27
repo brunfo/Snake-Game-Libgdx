@@ -74,6 +74,7 @@ public class PlayState extends GameState {
             Player newLive = new Player(15);
             extraLives.add(newLive);
         }
+        updateExtraLives();
 
         resetBody();
 
@@ -317,10 +318,12 @@ public class PlayState extends GameState {
                     "Are you sure you want",
                     Game.WIDTH/2,
                     Game.HEIGHT / 2 + 20);
+
             FontManager.centered(sb, font,
                     "to quit the game?",
                     Game.WIDTH/2,
                     Game.HEIGHT / 2);
+
             FontManager.centered(sb, font,
                     "(Y to exit)",
                     Game.WIDTH /2,

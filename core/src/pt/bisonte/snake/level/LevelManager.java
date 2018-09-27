@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class LevelManager {
 
-    private static boolean drawLevel=false;
+    private static boolean drawLevel=true;
 
     private static LevelData level;
 
@@ -21,13 +21,13 @@ public class LevelManager {
 
         //alter drawLevel to test new or replaced level.
         if(drawLevel)
-            load("level5.dat");
+            saveLevel();
 
         String filename;
         if (level == null)
-            filename = "level1.dat";
+            filename = "levels/level1.dat";
         else
-            filename="level" + (getLevelID()+1) + ".dat";
+            filename="levels/level" + (getLevelID()+1) + ".dat";
         load(filename);
     }
 
@@ -75,7 +75,7 @@ public class LevelManager {
             json.setElementType(LevelData.class, "walls", Wall.class);
 
             //preparing file and outputstream
-            FileOutputStream fileOut= new FileOutputStream("level" + getLevelID() + ".dat");
+            FileOutputStream fileOut= new FileOutputStream("levels/level" + getLevelID() + ".dat");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
 
             //writing
