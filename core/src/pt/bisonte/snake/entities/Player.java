@@ -71,6 +71,8 @@ public class Player extends GameObject {
             case LEFT:
                 radians=(float)Math.PI * 2;
         }
+
+        dead = false;
     }
 
     /**

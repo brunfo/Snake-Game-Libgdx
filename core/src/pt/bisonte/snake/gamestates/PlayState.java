@@ -163,9 +163,9 @@ public class PlayState extends GameState {
             player.wrap();
 
             if (beat1)
-                Jukebox.play("beat1");
+                Jukebox.play("slide1", 0.1f);
             else
-                Jukebox.play("beat2");
+                Jukebox.play("slide2", 0.10f);
             beat1 = !beat1;
 
 
@@ -401,7 +401,7 @@ public class PlayState extends GameState {
                     break;
             }
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) )
             playTime = !playTime;
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && playTime) {
             playTime = !playTime;

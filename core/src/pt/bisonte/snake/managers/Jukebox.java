@@ -20,8 +20,18 @@ public class Jukebox {
     }
 
     public static void play(String name) {
-	sounds.get(name).play();
+	play(name, 1f);
     }
+
+    /**
+     * Plays a sound width volume control
+     * @param name
+     * @param volume
+     */
+    public static void play(String name, float volume) {
+        sounds.get(name).play(volume);
+    }
+
 
     public static void loop(String name) {
 	sounds.get(name).loop();
