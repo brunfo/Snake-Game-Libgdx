@@ -8,6 +8,8 @@ public class GameStateManager {
 
     private GameState gameState;
 
+
+
     /**
      * States of the game.
      */
@@ -22,18 +24,36 @@ public class GameStateManager {
         SNAKE, PLAYER
     }
 
+    public enum PlayMode{
+        LEVEL_UP, INFINITE_TAIL
+    }
+
     private static OptionKeys optionKeys;
 
-    public void setOptionsKeys(OptionKeys optionKeys){
-        GameStateManager.optionKeys = optionKeys;
-    }
-   public static OptionKeys getOptionsKeys(){
-        return GameStateManager.optionKeys;
-    }
+    private static PlayMode playMode;
+
+    private static boolean newGame;
 
     public GameStateManager() {
         optionKeys = OptionKeys.PLAYER;
+        playMode= PlayMode.INFINITE_TAIL;
         setState(State.MENU);
+    }
+
+    public void setOptionsKeys(OptionKeys optionKeys) {
+        GameStateManager.optionKeys = optionKeys;
+    }
+
+    public static OptionKeys getOptionsKeys() {
+        return GameStateManager.optionKeys;
+    }
+
+    public static PlayMode getPlayMode() {
+        return playMode;
+    }
+
+    public static void setPlayMode(PlayMode playMode) {
+        GameStateManager.playMode = playMode;
     }
 
     /**
@@ -53,7 +73,10 @@ public class GameStateManager {
                 break;
             case PLAY:
                 Game.setCameraPosition();
-                gameState = new PlayState(this);
+                if (isNewGame())
+                    gameState = new OptionsState(this);
+                else
+                    gameState = new PlayState(this);
                 break;
             case HIGHSCORES:
                 Game.setCameraPosition();
@@ -62,12 +85,20 @@ public class GameStateManager {
             case OPTIONS:
                 Game.setCameraPosition();
                 gameState = new OptionsState(this);
+
                 break;
             case GAMEOVER:
                 Game.setCameraPosition();
                 gameState = new GameOverState(this);
                 break;
         }
+    }
+    public static boolean isNewGame() {
+        return newGame;
+    }
+
+    public static void startNewGame() {
+        newGame=!newGame;
     }
 
     public void update(float dt) {

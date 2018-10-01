@@ -21,6 +21,9 @@ import pt.bisonte.snake.managers.Jukebox;
 import java.util.ArrayList;
 import java.util.List;
 
+import static pt.bisonte.snake.managers.GameStateManager.PlayMode;
+import static pt.bisonte.snake.managers.GameStateManager.getPlayMode;
+
 
 public class PlayState extends GameState {
 
@@ -72,10 +75,18 @@ public class PlayState extends GameState {
         extraLives = new ArrayList<>();
         remaningApples = new Apple(0, -25, false);
 
+        //reduces extra lives to 0 if is in INFINITE_TAIL
+        if (getPlayMode() == PlayMode.INFINITE_TAIL) {
+            for (int i = player.getLives(); i > 0; i--) {
+                player.hit();
+            }
+        }
+
         for (int i = 0; i < player.getLives(); i++) {
             Player newLive = new Player(15);
             extraLives.add(newLive);
         }
+
         updateExtraLives();
 
         resetBody();
@@ -240,11 +251,11 @@ public class PlayState extends GameState {
                     Jukebox.play("levelup");
                 }
                 //if fruits is bonus, then the update time increases 10%, decreasing speed.
-                if (apple.isBonus()) {
+                if (apple.isBonus() && getPlayMode() == PlayMode.LEVEL_UP) {
                     moveTime += moveTime * 0.10f;
                 }
                 // else, each 5 decrease update time, increasing speed.
-                else if (player.fruitsAte() % 5 == 0) {
+                else if (player.fruitsAte() % 5 == 0 && getPlayMode() == PlayMode.LEVEL_UP) {
                     moveTime += moveTime * -0.10f;
                 }
                 Jukebox.play(apple.isBonus() ? "bonus" : "hiss");

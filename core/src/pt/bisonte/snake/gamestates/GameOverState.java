@@ -59,7 +59,6 @@ public class GameOverState extends GameState {
         FontManager.centered(spriteBatch, gameOverFont, "Game Over", Game.WIDTH / 2, 300);
 
         if (!newHighScore) {
-            spriteBatch.end();
             return;
         }
 

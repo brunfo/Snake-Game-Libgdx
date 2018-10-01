@@ -24,9 +24,11 @@ public class MenuState extends GameState {
     private int currentItem;
     private String[] menuItems;
 
+
     public MenuState(GameStateManager gameStateManager) {
         super(gameStateManager);
     }
+
 
     @Override
     public void init() {
@@ -104,6 +106,7 @@ public class MenuState extends GameState {
         // play
         switch (currentItem) {
             case 0:
+                GameStateManager.startNewGame();
                 gameStateManager.setState(GameStateManager.State.PLAY);
                 break;
             case 1:

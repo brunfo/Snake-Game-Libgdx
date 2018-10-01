@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
 import pt.bisonte.snake.entities.Player;
 import pt.bisonte.snake.entities.Wall;
+import pt.bisonte.snake.managers.GameStateManager;
 
 import java.io.*;
 import java.util.List;
@@ -58,6 +59,8 @@ public class LevelManager {
     }
 
     public static int getFruitToNextLevel() {
+        if (GameStateManager.getPlayMode()==GameStateManager.PlayMode.INFINITE_TAIL)
+            return 1000;
         return level.getFruitToNextLevel();
     }
 

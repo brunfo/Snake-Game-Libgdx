@@ -21,6 +21,8 @@ public class OptionsState extends GameState {
     private BitmapFont font;
 
     private int currentItem;
+    private String[] keysMenuItems;
+    private String[] playMenuItems;
     private String[] menuItems;
 
     public OptionsState(GameStateManager gameStateManager) {
@@ -39,7 +41,13 @@ public class OptionsState extends GameState {
 
         font = FontManager.setFont(20);
 
-        menuItems = new String[]{"Player", "Snake"};
+        keysMenuItems = new String[]{"Player", "Snake"};
+        playMenuItems = new String[]{"Level UP", "Infinite Tail"};
+
+        if (GameStateManager.isNewGame())
+            menuItems = playMenuItems;
+        else
+            menuItems = keysMenuItems;
 
     }
 
@@ -85,6 +93,14 @@ public class OptionsState extends GameState {
             select();
             Jukebox.play("accept");
         }
+
+        if ( Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            //revert newGame
+            GameStateManager.startNewGame();
+
+            Jukebox.play("accept");
+            gameStateManager.setState(GameStateManager.State.MENU);
+        }
     }
 
     @Override
@@ -101,16 +117,31 @@ public class OptionsState extends GameState {
      */
     private void select() {
         // play
-        switch (currentItem) {
-            case 0:
-                gameStateManager.setOptionsKeys(GameStateManager.OptionKeys.PLAYER);
-                break;
-            case 1:
-                gameStateManager.setOptionsKeys(GameStateManager.OptionKeys.SNAKE);
-                break;
+        if (GameStateManager.isNewGame()) {
+            switch (currentItem) {
+                case 0:
+                    GameStateManager.setPlayMode(GameStateManager.PlayMode.LEVEL_UP);
+                    break;
+                case 1:
+                    GameStateManager.setPlayMode(GameStateManager.PlayMode.INFINITE_TAIL);
+                    break;
+            }
+            Jukebox.play("accept");
+            GameStateManager.startNewGame();
+            gameStateManager.setState(GameStateManager.State.PLAY);
         }
-        Jukebox.play("accept");
-        gameStateManager.setState(GameStateManager.State.MENU);
+        else {
+            switch (currentItem) {
+                case 0:
+                    gameStateManager.setOptionsKeys(GameStateManager.OptionKeys.PLAYER);
+                    break;
+                case 1:
+                    gameStateManager.setOptionsKeys(GameStateManager.OptionKeys.SNAKE);
+                    break;
+            }
+            Jukebox.play("accept");
+            gameStateManager.setState(GameStateManager.State.MENU);
+        }
 
     }
 }
