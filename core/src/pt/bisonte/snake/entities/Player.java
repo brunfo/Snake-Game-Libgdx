@@ -56,6 +56,10 @@ public class Player extends GameObject {
      * @param facing Facing to..
      */
     public void resetToPosition(float x, float y, Facing facing){
+        //reset rotating keys to prevent start width a rotating position
+        rotateLeft=false;
+        rotateRight=false;
+
         setPosition(x,y);
         this.facing=facing;
         switch(facing){

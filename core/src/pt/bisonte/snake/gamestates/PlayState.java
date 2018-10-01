@@ -86,12 +86,6 @@ public class PlayState extends GameState {
      * Resets the snake position considering level start position and orientation.
      */
     private void resetBody() {
-        /*player.reset();
-        player.setPosition(
-                (5 * LevelManager.getGrid()),
-                (5 * LevelManager.getGrid())
-        );
-        */
         player.resetToPosition(
                 LevelManager.getStartX() * LevelManager.getGrid(),
                 LevelManager.getStartY() * LevelManager.getGrid(),
@@ -120,6 +114,8 @@ public class PlayState extends GameState {
         body.add(new Tail(
                 body.get(1).getX() - LevelManager.getGrid() * factorX,
                 body.get(1).getY() - LevelManager.getGrid() * factorY));
+
+
     }
 
 
@@ -245,13 +241,13 @@ public class PlayState extends GameState {
                 }
                 //if fruits is bonus, then the update time increases 10%, decreasing speed.
                 if (apple.isBonus()) {
-                    Jukebox.play("bonus");
                     moveTime += moveTime * 0.10f;
                 }
                 // else, each 5 decrease update time, increasing speed.
                 else if (player.fruitsAte() % 5 == 0) {
                     moveTime += moveTime * -0.10f;
                 }
+                Jukebox.play(apple.isBonus() ? "bonus" : "hiss");
             }
 
             if (apple.shouldRemove() || player.isDead())
@@ -401,7 +397,7 @@ public class PlayState extends GameState {
                     break;
             }
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) )
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
             playTime = !playTime;
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && playTime) {
             playTime = !playTime;
