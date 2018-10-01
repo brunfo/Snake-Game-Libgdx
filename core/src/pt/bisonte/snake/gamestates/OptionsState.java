@@ -1,5 +1,6 @@
 package pt.bisonte.snake.gamestates;
 
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -8,25 +9,24 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import pt.bisonte.snake.Game;
 import pt.bisonte.snake.managers.FontManager;
-import pt.bisonte.snake.managers.GameFileManager;
 import pt.bisonte.snake.managers.GameStateManager;
 import pt.bisonte.snake.managers.Jukebox;
 
-public class MenuState extends GameState {
+public class OptionsState extends GameState {
+
 
     private SpriteBatch spriteBatch;
     private ShapeRenderer shapeRenderer;
     private BitmapFont titleFont;
     private BitmapFont font;
 
-    static final String title = "SNAKE Game";
-
     private int currentItem;
     private String[] menuItems;
 
-    public MenuState(GameStateManager gameStateManager) {
+    public OptionsState(GameStateManager gameStateManager) {
         super(gameStateManager);
     }
+
 
     @Override
     public void init() {
@@ -39,9 +39,7 @@ public class MenuState extends GameState {
 
         font = FontManager.setFont(20);
 
-        menuItems = new String[]{"Play", "Highscores", "Options", "Quit"};
-
-        GameFileManager.load();
+        menuItems = new String[]{"Player", "Snake"};
 
     }
 
@@ -56,7 +54,7 @@ public class MenuState extends GameState {
         spriteBatch.setProjectionMatrix(Game.camera.combined);
         shapeRenderer.setProjectionMatrix(Game.camera.combined);
 
-        FontManager.centered(spriteBatch, titleFont, title, Game.WIDTH / 2, Game.HEIGHT - 50);
+        FontManager.centered(spriteBatch, titleFont, MenuState.title, Game.WIDTH / 2, Game.HEIGHT - 50);
 
         float row = Game.HEIGHT - 150;
 
@@ -95,6 +93,7 @@ public class MenuState extends GameState {
         shapeRenderer.dispose();
         titleFont.dispose();
         font.dispose();
+
     }
 
     /**
@@ -104,18 +103,14 @@ public class MenuState extends GameState {
         // play
         switch (currentItem) {
             case 0:
-                gameStateManager.setState(GameStateManager.State.PLAY);
+                gameStateManager.setOptionsKeys(GameStateManager.OptionKeys.PLAYER);
                 break;
             case 1:
-                gameStateManager.setState(GameStateManager.State.HIGHSCORES);
-                break;
-            case 2:
-                gameStateManager.setState(GameStateManager.State.OPTIONS);
-                break;
-            case 3:
-                Gdx.app.exit();
+                gameStateManager.setOptionsKeys(GameStateManager.OptionKeys.SNAKE);
                 break;
         }
+        Jukebox.play("accept");
+        gameStateManager.setState(GameStateManager.State.MENU);
 
     }
 }

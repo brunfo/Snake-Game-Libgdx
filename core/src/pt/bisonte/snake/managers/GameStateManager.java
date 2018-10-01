@@ -12,7 +12,7 @@ public class GameStateManager {
      * States of the game.
      */
     public enum State {
-        MENU, PLAY, HIGHSCORES, GAMEOVER
+        MENU, PLAY, HIGHSCORES, OPTIONS, GAMEOVER
     }
 
     /**
@@ -22,8 +22,14 @@ public class GameStateManager {
         SNAKE, PLAYER
     }
 
-    public static OptionKeys optionKeys;
+    private static OptionKeys optionKeys;
 
+    public void setOptionsKeys(OptionKeys optionKeys){
+        GameStateManager.optionKeys = optionKeys;
+    }
+   public static OptionKeys getOptionsKeys(){
+        return GameStateManager.optionKeys;
+    }
 
     public GameStateManager() {
         optionKeys = OptionKeys.PLAYER;
@@ -33,7 +39,7 @@ public class GameStateManager {
     /**
      * Sets new game state.
      *
-     * @param state - MENU, PLAY, HIGHSCORES, GAMEOVER.
+     * @param state - MENU, PLAY, HIGHSCORES, OPTIONS, GAMEOVER.
      */
     public void setState(State state) {
         if (gameState != null) {
@@ -52,6 +58,10 @@ public class GameStateManager {
             case HIGHSCORES:
                 Game.setCameraPosition();
                 gameState = new HighScoreState(this);
+                break;
+            case OPTIONS:
+                Game.setCameraPosition();
+                gameState = new OptionsState(this);
                 break;
             case GAMEOVER:
                 Game.setCameraPosition();

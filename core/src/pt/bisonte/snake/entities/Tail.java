@@ -1,13 +1,14 @@
 package pt.bisonte.snake.entities;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import pt.bisonte.snake.level.LevelManager;
 
 public class Tail extends GameObject {
 
-    public Tail(float x, float y, float size) {
+    public Tail(float x, float y) {
 
         //set WIDTH and HEIGHT
-        width = height = size;
+        width = height = LevelManager.getGrid();
 
         setPosition(x, y);
     }

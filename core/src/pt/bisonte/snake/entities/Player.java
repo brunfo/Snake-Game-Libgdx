@@ -4,16 +4,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Player extends GameObject {
 
-    private enum Facing {
+    public enum Facing {
         UP, DOWN, LEFT, RIGHT
     }
 
     private Facing facing;
 
-
     private boolean rotateLeft;
     private boolean rotateRight;
-
 
     private boolean dead;
     private boolean eat;
@@ -49,6 +47,30 @@ public class Player extends GameObject {
         facing = Facing.UP;
 
         dead = false;
+    }
+
+    /**
+     * Resets to determinate position width orientation.
+     * @param x Coordinate
+     * @param y Coordinate
+     * @param facing Facing to..
+     */
+    public void resetToPosition(float x, float y, Facing facing){
+        setPosition(x,y);
+        this.facing=facing;
+        switch(facing){
+            case UP:
+                radians =(float) Math.PI /2;
+                break;
+            case DOWN:
+                radians = (float) Math.PI *3/2;
+                break;
+            case RIGHT:
+                radians = (float) Math.PI;
+                break;
+            case LEFT:
+                radians=(float)Math.PI * 2;
+        }
     }
 
     /**

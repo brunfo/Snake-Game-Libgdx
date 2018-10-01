@@ -1,6 +1,7 @@
 package pt.bisonte.snake.level;
 
 import pt.bisonte.snake.Game;
+import static pt.bisonte.snake.entities.Player.Facing;
 import pt.bisonte.snake.entities.Wall;
 
 import java.util.ArrayList;
@@ -23,6 +24,10 @@ class LevelData {
 
     private List<Wall> walls;
 
+    private float startX;
+    private float startY;
+    private Facing facing;
+
     /**
      * Method to save and replace level design.
      */
@@ -42,6 +47,10 @@ class LevelData {
         levelID = 1;
         fruitToNextLevel = 20;
 
+        startX = 5;
+        startY =5;
+        facing=Facing.UP;
+
         init();
 
         line(0, 0, 19, 0);
@@ -56,6 +65,10 @@ class LevelData {
         gridCell = 15;
         levelID = 2;
         fruitToNextLevel = 40;
+
+        startX = 5;
+        startY =5;
+        facing=Facing.UP;
 
         init();
 
@@ -76,6 +89,10 @@ class LevelData {
         gridCell = 15;
         levelID = 3;
         fruitToNextLevel = 60;
+
+        startX = 3;
+        startY =5;
+        facing=Facing.UP;
 
         init();
 
@@ -99,6 +116,9 @@ class LevelData {
         gridCell = 15;
         levelID = 4;
         fruitToNextLevel = 80;
+        startX = 3;
+        startY =13;
+        facing=Facing.UP;
 
         init();
 
@@ -115,7 +135,9 @@ class LevelData {
         gridCell = 15;
         levelID = 5;
         fruitToNextLevel = 100;
-
+        startX = 10;
+        startY =10;
+        facing=Facing.UP;
         init();
 
         line(0, 0, 0, 6);
@@ -137,7 +159,9 @@ class LevelData {
         gridCell = 15;
         levelID = 6;
         fruitToNextLevel = 120;
-
+        startX = 10;
+        startY =8;
+        facing=Facing.UP;
         init();
 
         line(0, 0, 0, 6);
@@ -170,7 +194,9 @@ class LevelData {
         gridCell = 15;
         levelID = 7;
         fruitToNextLevel = 140;
-
+        startX = 15;
+        startY =5;
+        facing=Facing.DOWN;
         init();
 
         line(0, 10, 19, 10);
@@ -184,7 +210,9 @@ class LevelData {
         gridCell = 15;
         levelID = 8;
         fruitToNextLevel = 160;
-
+        startX = 10;
+        startY =15;
+        facing=Facing.RIGHT;
         init();
 
         line(0, 10, 19, 10);
@@ -198,7 +226,9 @@ class LevelData {
         gridCell = 15;
         levelID = 9;
         fruitToNextLevel = 180;
-
+        startX = 15;
+        startY =15;
+        facing=Facing.RIGHT;
         init();
 
         line(0, 10, 19, 10);
@@ -213,7 +243,9 @@ class LevelData {
         gridCell = 15;
         levelID = 10;
         fruitToNextLevel = 200;
-
+        startX = 10;
+        startY =9;
+        facing=Facing.LEFT;
         init();
 
         line(0, 6, 19, 6);
@@ -297,5 +329,16 @@ class LevelData {
     }
 
 
+    float getStartx() {
+        return startX;
+    }
+
+    float getStartY() {
+        return startY;
+    }
+
+    Facing getFacing() {
+        return facing;
+    }
 }
         

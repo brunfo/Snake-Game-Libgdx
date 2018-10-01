@@ -3,6 +3,7 @@ package pt.bisonte.snake.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
+import pt.bisonte.snake.entities.Player;
 import pt.bisonte.snake.entities.Wall;
 
 import java.io.*;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public class LevelManager {
 
-    private static boolean drawLevel=true;
+    private static boolean drawLevel=false;
 
     private static LevelData level;
 
@@ -134,4 +135,22 @@ public class LevelManager {
     }
 
 
+    /**
+     * Grants that LevelManager is reset without a stored level in memory.
+     */
+    public static void reset() {
+        level=null;
+    }
+
+    public static float getStartX() {
+        return level.getStartx();
+    }
+
+    public static float getStartY() {
+        return level.getStartY();
+    }
+
+    public static Player.Facing getFacing() {
+        return level.getFacing();
+    }
 }

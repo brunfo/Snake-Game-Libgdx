@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,7 +13,10 @@ import pt.bisonte.snake.entities.Player;
 import pt.bisonte.snake.entities.Tail;
 import pt.bisonte.snake.entities.Wall;
 import pt.bisonte.snake.level.LevelManager;
-import pt.bisonte.snake.managers.*;
+import pt.bisonte.snake.managers.FontManager;
+import pt.bisonte.snake.managers.GameFileManager;
+import pt.bisonte.snake.managers.GameStateManager;
+import pt.bisonte.snake.managers.Jukebox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,22 +83,45 @@ public class PlayState extends GameState {
     }
 
     /**
-     * Resets the snake position.
+     * Resets the snake position considering level start position and orientation.
      */
     private void resetBody() {
-        player.reset();
+        /*player.reset();
         player.setPosition(
                 (5 * LevelManager.getGrid()),
                 (5 * LevelManager.getGrid())
         );
+        */
+        player.resetToPosition(
+                LevelManager.getStartX() * LevelManager.getGrid(),
+                LevelManager.getStartY() * LevelManager.getGrid(),
+                LevelManager.getFacing());
 
         body = new ArrayList<>();
 
+        //factor variables for initialize tail considering orientation
+        int factorX = LevelManager.getFacing() == Player.Facing.UP ||
+                LevelManager.getFacing() == Player.Facing.DOWN ? 0 :
+                LevelManager.getFacing() == Player.Facing.LEFT ? -1 : 1;
+
+        int factorY = LevelManager.getFacing() == Player.Facing.LEFT ||
+                LevelManager.getFacing() == Player.Facing.RIGHT ? 0 :
+                LevelManager.getFacing() == Player.Facing.DOWN ? -1 : 1;
+
         //add 2 body
-        body.add(new Tail(player.getX(), player.getY() - LevelManager.getGrid(), LevelManager.getGrid()));
-        body.add(new Tail(body.get(0).getX(), body.get(0).getY() - LevelManager.getGrid(), LevelManager.getGrid()));
-        body.add(new Tail(body.get(1).getX(), body.get(1).getY() - LevelManager.getGrid(), LevelManager.getGrid()));
+        body.add(new Tail(
+                player.getX() - LevelManager.getGrid() * factorX,
+                player.getY() - LevelManager.getGrid() * factorY));
+
+        body.add(new Tail(
+                body.get(0).getX() - LevelManager.getGrid() * factorX,
+                body.get(0).getY() - LevelManager.getGrid() * factorY));
+
+        body.add(new Tail(
+                body.get(1).getX() - LevelManager.getGrid() * factorX,
+                body.get(1).getY() - LevelManager.getGrid() * factorY));
     }
+
 
     private boolean isPlayTime() {
         return playTime;
@@ -124,7 +149,7 @@ public class PlayState extends GameState {
             if (body.size() != 0) {
                 //if player has eat a apple add a body part
                 if (player.hasEat())
-                    body.add(new Tail(0, 0, LevelManager.getGrid()));
+                    body.add(new Tail(0, 0));
                 //sets new position of body parts
                 for (int i = body.size() - 1; i >= 0; i--) {
                     if (i == 0)
@@ -240,11 +265,13 @@ public class PlayState extends GameState {
     /**
      * Format game board. Sets main class game WIDTH and HEIGHT,
      * according columns and rows times gridCell dimension.
+     * <p>
+     * Grants that LevelManager is reset without a stored level in memory.
      */
     private void setupLevel() {
         tempGameWidth = Game.WIDTH;
         tempGameHeight = Game.HEIGHT;
-
+        LevelManager.reset();
         LevelManager.getNextLevel();
     }
 
@@ -280,7 +307,7 @@ public class PlayState extends GameState {
 
         FontManager.centered(sb, titleFont,
                 MenuState.title,
-                Game.WIDTH  / 2,
+                Game.WIDTH / 2,
                 Game.HEIGHT + 80);
 
         FontManager.left(sb, font,
@@ -316,17 +343,17 @@ public class PlayState extends GameState {
         if (exitMessage) {
             FontManager.centered(sb, font,
                     "Are you sure you want",
-                    Game.WIDTH/2,
+                    Game.WIDTH / 2,
                     Game.HEIGHT / 2 + 20);
 
             FontManager.centered(sb, font,
                     "to quit the game?",
-                    Game.WIDTH/2,
+                    Game.WIDTH / 2,
                     Game.HEIGHT / 2);
 
             FontManager.centered(sb, font,
                     "(Y to exit)",
-                    Game.WIDTH /2,
+                    Game.WIDTH / 2,
                     Game.HEIGHT / 2 - 20);
         }
 
@@ -361,7 +388,7 @@ public class PlayState extends GameState {
     public void handleInput() {
         if (isPlayTime()) {
             //user preferences input keys
-            switch (GameStateManager.optionKeys) {
+            switch (GameStateManager.getOptionsKeys()) {
                 case SNAKE://snake perspective
                     player.setRotateLeft(Gdx.input.isKeyJustPressed(Input.Keys.LEFT));
                     player.setRotateRight(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT));
@@ -380,6 +407,8 @@ public class PlayState extends GameState {
             playTime = !playTime;
             exitMessage = !exitMessage;
         }
+        if (exitMessage && Gdx.input.isKeyJustPressed(Input.Keys.Y))
+            gameStateManager.setState(GameStateManager.State.MENU);
 
     }
 
