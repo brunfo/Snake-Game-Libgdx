@@ -19,6 +19,7 @@ public class OptionsState extends GameState {
     private ShapeRenderer renderer;
     private BitmapFont titleFont;
     private BitmapFont font;
+    private BitmapFont info;
 
     private int currentItem;
     private String[] keysMenuItems;
@@ -40,6 +41,7 @@ public class OptionsState extends GameState {
         titleFont.setColor(Color.WHITE);
 
         font = Font.MANAGER.set(20);
+        info = Font.MANAGER.set(15);
 
         keysMenuItems = new String[]{"Player", "Snake"};
         playMenuItems = new String[]{"Level UP", "Infinite Tail"};
@@ -65,6 +67,10 @@ public class OptionsState extends GameState {
         Font.MANAGER.centered(batch, titleFont, MenuState.title, Game.WIDTH / 2, Game.HEIGHT - 50);
 
         float row = Game.HEIGHT - 150;
+        String str = "Chose your preferred play input keys";
+        Font.MANAGER.centered(batch, info, str, Game.WIDTH / 2, row);
+
+        row -= 50;
 
         for (int i = 0; i < menuItems.length; i++) {
             row -= 30;
@@ -75,6 +81,11 @@ public class OptionsState extends GameState {
                 font.setColor(Color.WHITE);
             Font.MANAGER.centered(batch, font, menuItems[i], Game.WIDTH / 2, row);
         }
+
+        str = currentItem == 0 ? "Left, Right, Up and Down keys" : "Left or Right keys to rotate imputed direction";
+
+        row -= 50;
+        Font.MANAGER.centered(batch, info, str, Game.WIDTH / 2, row);
 
     }
 
