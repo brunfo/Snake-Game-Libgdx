@@ -4,15 +4,19 @@ import com.badlogic.gdx.Gdx;
 
 import java.io.*;
 
-public class GameFileManager {
+/**
+ * Singleton Game File Manager
+ */
+public enum GameFile {
+    MANAGER;
 
-    public static GameData gameData;
-    private static final String filename = "highscores.dat";
+    public GameData gameData;
+    private final String filename = "highscores.dat";
 
     /**
      * Saves a file with game high scores.
      */
-    public static void save() {
+    public void save() {
         try {
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
             out.writeObject(gameData);
@@ -28,7 +32,7 @@ public class GameFileManager {
     /**
      * Loads file width saved high scores.
      */
-    public static void load() {
+    public void load() {
         try {
             if (!saveFileExists()) {
                 init();
@@ -49,13 +53,13 @@ public class GameFileManager {
      *
      * @return true or false.
      */
-    private static boolean saveFileExists() {
+    private boolean saveFileExists() {
         File f = new File(filename);
         return f.exists();
     }
 
 
-    private static void init() {
+    private void init() {
         gameData = new GameData();
         gameData.init();
         save();

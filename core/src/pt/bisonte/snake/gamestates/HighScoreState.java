@@ -23,8 +23,8 @@ public class HighScoreState extends GameState {
         spriteBatch = new SpriteBatch();
         font = Font.MANAGER.set(20);
 
-        GameFileManager.load();
-        highScores = GameFileManager.gameData.getHighScores();
+        GameFile.MANAGER.load();
+        highScores = GameFile.MANAGER.gameData.getHighScores();
     }
 
     @Override

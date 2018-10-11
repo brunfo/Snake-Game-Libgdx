@@ -14,7 +14,7 @@ import pt.bisonte.snake.entities.Tail;
 import pt.bisonte.snake.entities.Wall;
 import pt.bisonte.snake.level.LevelManager;
 import pt.bisonte.snake.managers.Font;
-import pt.bisonte.snake.managers.GameFileManager;
+import pt.bisonte.snake.managers.GameFile;
 import pt.bisonte.snake.managers.GameStateManager;
 import pt.bisonte.snake.managers.Jukebox;
 
@@ -178,7 +178,7 @@ public class PlayState extends GameState {
 
             if (player.isDead())
                 if (player.getLives() < 0) {
-                    GameFileManager.gameData.setTentativeScore((long) player.getScore());
+                    GameFile.MANAGER.gameData.setTentativeScore((long) player.getScore());
                     gameStateManager.setState(GameStateManager.State.GAMEOVER);
                 } else {
                     resetBody();

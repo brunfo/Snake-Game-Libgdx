@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import pt.bisonte.snake.Game;
 import pt.bisonte.snake.managers.Font;
-import pt.bisonte.snake.managers.GameFileManager;
+import pt.bisonte.snake.managers.GameFile;
 import pt.bisonte.snake.managers.GameStateManager;
 
 public class GameOverState extends GameState {
@@ -35,7 +35,7 @@ public class GameOverState extends GameState {
         spriteBatch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
 
-        newHighScore = GameFileManager.gameData.isHighScore(GameFileManager.gameData.getTentativeScore());
+        newHighScore = GameFile.MANAGER.gameData.isHighScore(GameFile.MANAGER.gameData.getTentativeScore());
 
         if (newHighScore) {
             newName = new char[]{'A', 'A', 'A'};
@@ -62,7 +62,7 @@ public class GameOverState extends GameState {
             return;
         }
 
-        String str = "New High Score: " + GameFileManager.gameData.getTentativeScore();
+        String str = "New High Score: " + GameFile.MANAGER.gameData.getTentativeScore();
         Font.MANAGER.centered(spriteBatch, font, str, Game.WIDTH / 2, 200);
 
         GlyphLayout layout = new GlyphLayout();
@@ -90,9 +90,9 @@ public class GameOverState extends GameState {
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Keys.ENTER)) {
             if (newHighScore) {
-                GameFileManager.gameData.addHighScore(GameFileManager.gameData.getTentativeScore(),
+                GameFile.MANAGER.gameData.addHighScore(GameFile.MANAGER.gameData.getTentativeScore(),
                         new String(newName));
-                GameFileManager.save();
+                GameFile.MANAGER.save();
             }
             gameStateManager.setState(GameStateManager.State.MENU);
         }

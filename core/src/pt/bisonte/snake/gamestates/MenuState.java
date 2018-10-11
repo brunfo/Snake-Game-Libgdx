@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import pt.bisonte.snake.Game;
 import pt.bisonte.snake.managers.Font;
-import pt.bisonte.snake.managers.GameFileManager;
+import pt.bisonte.snake.managers.GameFile;
 import pt.bisonte.snake.managers.GameStateManager;
 import pt.bisonte.snake.managers.Jukebox;
 
@@ -43,7 +43,7 @@ public class MenuState extends GameState {
 
         menuItems = new String[]{"Play", "Highscores", "Options", "Quit"};
 
-        GameFileManager.load();
+        GameFile.MANAGER.load();
 
     }
 
