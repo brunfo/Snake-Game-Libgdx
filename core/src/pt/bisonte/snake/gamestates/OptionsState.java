@@ -15,8 +15,8 @@ import pt.bisonte.snake.managers.Jukebox;
 public class OptionsState extends GameState {
 
 
-    private SpriteBatch spriteBatch;
-    private ShapeRenderer shapeRenderer;
+    private SpriteBatch batch;
+    private ShapeRenderer renderer;
     private BitmapFont titleFont;
     private BitmapFont font;
 
@@ -32,8 +32,8 @@ public class OptionsState extends GameState {
 
     @Override
     public void init() {
-        spriteBatch = new SpriteBatch();
-        shapeRenderer = new ShapeRenderer();
+        batch = gameStateManager.batch;
+        renderer = gameStateManager.renderer;
 
         // set font
         titleFont = Font.MANAGER.set(36);
@@ -59,10 +59,10 @@ public class OptionsState extends GameState {
 
     @Override
     public void draw() {
-        spriteBatch.setProjectionMatrix(Game.camera.combined);
-        shapeRenderer.setProjectionMatrix(Game.camera.combined);
+        batch.setProjectionMatrix(Game.camera.combined);
+        renderer.setProjectionMatrix(Game.camera.combined);
 
-        Font.MANAGER.centered(spriteBatch, titleFont, MenuState.title, Game.WIDTH / 2, Game.HEIGHT - 50);
+        Font.MANAGER.centered(batch, titleFont, MenuState.title, Game.WIDTH / 2, Game.HEIGHT - 50);
 
         float row = Game.HEIGHT - 150;
 
@@ -73,7 +73,7 @@ public class OptionsState extends GameState {
                 font.setColor(Color.RED);
             else
                 font.setColor(Color.WHITE);
-            Font.MANAGER.centered(spriteBatch, font, menuItems[i], Game.WIDTH / 2, row);
+            Font.MANAGER.centered(batch, font, menuItems[i], Game.WIDTH / 2, row);
         }
 
     }
@@ -94,7 +94,7 @@ public class OptionsState extends GameState {
             Jukebox.MANAGER.play("accept");
         }
 
-        if ( Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             //revert newGame
             GameStateManager.startNewGame();
 
@@ -105,11 +105,7 @@ public class OptionsState extends GameState {
 
     @Override
     public void dispose() {
-        spriteBatch.dispose();
-        shapeRenderer.dispose();
-        titleFont.dispose();
-        font.dispose();
-
+        //dispose of objects is manipulated by the Game class
     }
 
     /**
@@ -129,8 +125,7 @@ public class OptionsState extends GameState {
             Jukebox.MANAGER.play("accept");
             GameStateManager.startNewGame();
             gameStateManager.setState(GameStateManager.State.PLAY);
-        }
-        else {
+        } else {
             switch (currentItem) {
                 case 0:
                     gameStateManager.setOptionsKeys(GameStateManager.OptionKeys.PLAYER);

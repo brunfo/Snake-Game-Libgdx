@@ -27,12 +27,24 @@ task dist(type: Jar) {
     from files(sourceSets.main.output.classesDir)
     from files(sourceSets.main.output.resourcesDir)
     from { configurations.compile.collect { zipTree(it) } }
-    from files(project.assetsDir);
+    from files(project.assetsDir)
 
     manifest {
         attributes 'Main-Class': project.mainClassName
         attributes 'ClassPath': project.assetsDir
     }
+
 }
 
 dist.dependsOn classes
+
+
+task copyLevels(type: Copy) {
+    from '../core/assets/levels'
+    into 'build/Snake-1.0/levels'
+}
+
+task copyDist(type: Copy){
+    from 'build/libs'
+    into 'build/Snake-1.0'
+}

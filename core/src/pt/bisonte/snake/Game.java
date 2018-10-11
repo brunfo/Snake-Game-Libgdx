@@ -52,6 +52,10 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void dispose() {
+        gameStateManager.batch.dispose();
+        gameStateManager.renderer.dispose();
+        gameStateManager.titleFont.dispose();
+        gameStateManager.font.dispose();
     }
 
     private void loadSounds(){

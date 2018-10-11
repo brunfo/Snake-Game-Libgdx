@@ -14,8 +14,8 @@ import pt.bisonte.snake.managers.GameStateManager;
 
 public class GameOverState extends GameState {
 
-    private SpriteBatch spriteBatch;
-    private ShapeRenderer shapeRenderer;
+    private SpriteBatch batch;
+    private ShapeRenderer renderer;
 
     private BitmapFont gameOverFont;
     private BitmapFont font;
@@ -32,8 +32,8 @@ public class GameOverState extends GameState {
 
     @Override
     public void init() {
-        spriteBatch = new SpriteBatch();
-        shapeRenderer = new ShapeRenderer();
+        batch = gameStateManager.batch;
+        renderer = gameStateManager.renderer;
 
         newHighScore = GameFile.MANAGER.gameData.isHighScore(GameFile.MANAGER.gameData.getTentativeScore());
 
@@ -54,35 +54,35 @@ public class GameOverState extends GameState {
 
     @Override
     public void draw() {
-        spriteBatch.setProjectionMatrix(Game.camera.combined);
+        batch.setProjectionMatrix(Game.camera.combined);
 
-        Font.MANAGER.centered(spriteBatch, gameOverFont, "Game Over", Game.WIDTH / 2, 300);
+        Font.MANAGER.centered(batch, gameOverFont, "Game Over", Game.WIDTH / 2, 300);
 
         if (!newHighScore) {
             return;
         }
 
         String str = "New High Score: " + GameFile.MANAGER.gameData.getTentativeScore();
-        Font.MANAGER.centered(spriteBatch, font, str, Game.WIDTH / 2, 200);
+        Font.MANAGER.centered(batch, font, str, Game.WIDTH / 2, 200);
 
         GlyphLayout layout = new GlyphLayout();
         layout.setText(font, "AAA");
 
-        spriteBatch.begin();
+        batch.begin();
         for (int i = 0; i < newName.length; i++) {
-            font.draw(spriteBatch, Character.toString(newName[i]),
+            font.draw(batch, Character.toString(newName[i]),
                     (Game.WIDTH - layout.width) / 2 + 14 * i,
                     150);
         }
-        spriteBatch.end();
+        batch.end();
 
-        shapeRenderer.begin(ShapeType.Line);
-        shapeRenderer.line(
+        renderer.begin(ShapeType.Line);
+        renderer.line(
                 Game.WIDTH / 2 - layout.width / 2 + 14 * currentChar,
                 125,
                 Game.WIDTH / 2 - layout.width / 2 + 10 + 14 * currentChar,
                 125);
-        shapeRenderer.end();
+        renderer.end();
 
     }
 
@@ -135,11 +135,7 @@ public class GameOverState extends GameState {
 
     @Override
     public void dispose() {
-        spriteBatch.dispose();
-        shapeRenderer.dispose();
-        gameOverFont.dispose();
-        font.dispose();
-
+        //dispose of objects is manipulated by the Game class
     }
 
 }

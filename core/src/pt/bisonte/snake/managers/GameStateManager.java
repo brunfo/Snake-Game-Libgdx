@@ -1,5 +1,8 @@
 package pt.bisonte.snake.managers;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import pt.bisonte.snake.Game;
 import pt.bisonte.snake.gamestates.*;
 
@@ -33,6 +36,12 @@ public class GameStateManager {
     private static PlayMode playMode;
 
     private static boolean newGame;
+
+    public final SpriteBatch batch = new SpriteBatch();
+    public final ShapeRenderer renderer = new ShapeRenderer();
+    public final BitmapFont titleFont = new BitmapFont();
+    public final BitmapFont font = new BitmapFont();
+
 
     public GameStateManager() {
         optionKeys = OptionKeys.PLAYER;

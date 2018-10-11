@@ -53,6 +53,7 @@ public class PlayState extends GameState {
 
     private boolean beat1;
 
+    private Color color;
 
     public PlayState(GameStateManager gameStateManager) {
         super(gameStateManager);
@@ -60,9 +61,14 @@ public class PlayState extends GameState {
 
     @Override
     public void init() {
-        sr = new ShapeRenderer();
-        sb = new SpriteBatch();
-        titleFont = new BitmapFont();
+        sr = gameStateManager.renderer;
+        sb = gameStateManager.batch;
+        titleFont = gameStateManager.titleFont;
+
+        //removed from draw, causes a huge consumption of memory in there
+        color = new Color(0, 1, 1, 1);
+        titleFont = Font.MANAGER.set(30, color);
+        font = Font.MANAGER.set(15);
 
         setupLevel();
 
@@ -300,7 +306,9 @@ public class PlayState extends GameState {
 
     @Override
     public void draw() {
+
         drawGrid();
+
         sr.setProjectionMatrix(Game.camera.combined);
         sb.setProjectionMatrix(Game.camera.combined);
 
@@ -309,8 +317,6 @@ public class PlayState extends GameState {
             pWall.draw(sr);
         }
 
-        titleFont = Font.MANAGER.set(30, new Color(0, 1, 1, 1));
-        font = Font.MANAGER.set(15);
 
         Font.MANAGER.centered(sb, titleFont,
                 MenuState.title,
@@ -425,10 +431,6 @@ public class PlayState extends GameState {
         Game.HEIGHT = tempGameHeight;
         Game.setCameraPosition();
 
-        sr.dispose();
-        sb.dispose();
-        font.dispose();
-        titleFont.dispose();
-
+        //dispose of objects is manipulated by the Game class
     }
 }

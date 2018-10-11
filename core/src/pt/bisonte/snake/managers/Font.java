@@ -19,6 +19,12 @@ public enum Font {
 
     MANAGER;
 
+    FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+    // set font
+    private FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(
+            Gdx.files.internal("fonts/Hyperspace Bold.ttf"));
+    private GlyphLayout layout = new GlyphLayout();
+
     /**
      * Formats a font.
      *
@@ -38,17 +44,10 @@ public enum Font {
      * @return formatted bitmap font.
      */
     public BitmapFont set(int size, Color color) {
-        // set font
-        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(
-                Gdx.files.internal("fonts/Hyperspace Bold.ttf"));
-
-        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         // set parameters for the font
         fontParameter.size = size;
         fontParameter.color = color;
-        BitmapFont font = fontGenerator.generateFont(fontParameter);
-        fontGenerator.dispose();
-        return font;
+        return fontGenerator.generateFont(fontParameter);
     }
 
     /**
@@ -61,11 +60,12 @@ public enum Font {
      * @param height  Assigned vertical
      */
     public void left(SpriteBatch sb, BitmapFont font, String message, float width, float height) {
-        GlyphLayout layout = new GlyphLayout();
         sb.begin();
+        layout.reset();
         layout.setText(font, message);
         font.draw(sb, layout, width, height);
         sb.end();
+        layout.reset();
     }
 
     /**
@@ -78,11 +78,12 @@ public enum Font {
      * @param height  Assigned vertical
      */
     public void right(SpriteBatch sb, BitmapFont font, String message, float width, float height) {
-        GlyphLayout layout = new GlyphLayout();
         sb.begin();
+        layout.reset();
         layout.setText(font, message);
         font.draw(sb, layout, width - layout.width, height);
         sb.end();
+        layout.reset();
     }
 
     /**
@@ -95,11 +96,12 @@ public enum Font {
      * @param height  Assigned vertical
      */
     public void centered(SpriteBatch sb, BitmapFont font, String message, float width, float height) {
-        GlyphLayout layout = new GlyphLayout();
         sb.begin();
+        layout.reset();
         layout.setText(font, message);
         font.draw(sb, layout, width - layout.width / 2, height);
         sb.end();
+        layout.reset();
     }
 
 }
