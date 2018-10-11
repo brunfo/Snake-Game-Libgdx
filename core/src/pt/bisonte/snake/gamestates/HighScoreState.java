@@ -21,7 +21,7 @@ public class HighScoreState extends GameState {
     @Override
     public void init() {
         spriteBatch = new SpriteBatch();
-        font = FontManager.setFont(20);
+        font = Font.MANAGER.set(20);
 
         GameFileManager.load();
         highScores = GameFileManager.gameData.getHighScores();
@@ -37,14 +37,14 @@ public class HighScoreState extends GameState {
     public void draw() {
         spriteBatch.setProjectionMatrix(Game.camera.combined);
 
-        FontManager.centered(spriteBatch, font, "High Scores", Game.WIDTH / 2, Game.HEIGHT - 30);
+        Font.MANAGER.centered(spriteBatch, font, "High Scores", Game.WIDTH / 2, Game.HEIGHT - 30);
 
         float row = Game.HEIGHT - 55;
 
         for (int i = 0; i < highScores.length; i++) {
             row -= 30;
             String s = String.format("%2d. %5s %s", i + 1, highScores[i].getScore(), highScores[i].getName());
-            FontManager.centered(spriteBatch, font, s, Game.WIDTH / 2, row);
+            Font.MANAGER.centered(spriteBatch, font, s, Game.WIDTH / 2, row);
         }
     }
 

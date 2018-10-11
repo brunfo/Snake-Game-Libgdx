@@ -13,12 +13,11 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
  * "Effective Java Second Revised Edition".
  * <p>
  * No need to use private constructor.
- * No need to use getInstance, just use FontManager.INSTANCE
+ * No need to use getInstance, just use Font.MANAGER
  */
-public enum FontManager {
+public enum Font {
 
-    INSTANCE;
-
+    MANAGER;
 
     /**
      * Formats a font.
@@ -26,9 +25,9 @@ public enum FontManager {
      * @param size - size of the font.
      * @return formatted bitmap font.
      */
-    public static BitmapFont setFont(int size) {
+    public BitmapFont set(int size) {
 
-        return setFont(size, new Color(1, 1, 1, 1));
+        return set(size, new Color(1, 1, 1, 1));
     }
 
     /**
@@ -38,7 +37,7 @@ public enum FontManager {
      * @param color - color of the font.
      * @return formatted bitmap font.
      */
-    public static BitmapFont setFont(int size, Color color) {
+    public BitmapFont set(int size, Color color) {
         // set font
         FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(
                 Gdx.files.internal("fonts/Hyperspace Bold.ttf"));
@@ -61,7 +60,7 @@ public enum FontManager {
      * @param width   Assigned horizontal
      * @param height  Assigned vertical
      */
-    public static void left(SpriteBatch sb, BitmapFont font, String message, float width, float height) {
+    public void left(SpriteBatch sb, BitmapFont font, String message, float width, float height) {
         GlyphLayout layout = new GlyphLayout();
         sb.begin();
         layout.setText(font, message);
@@ -78,7 +77,7 @@ public enum FontManager {
      * @param width   Assigned horizontal
      * @param height  Assigned vertical
      */
-    public static void right(SpriteBatch sb, BitmapFont font, String message, float width, float height) {
+    public void right(SpriteBatch sb, BitmapFont font, String message, float width, float height) {
         GlyphLayout layout = new GlyphLayout();
         sb.begin();
         layout.setText(font, message);
@@ -95,7 +94,7 @@ public enum FontManager {
      * @param width   Assigned horizontal
      * @param height  Assigned vertical
      */
-    public static void centered(SpriteBatch sb, BitmapFont font, String message, float width, float height) {
+    public void centered(SpriteBatch sb, BitmapFont font, String message, float width, float height) {
         GlyphLayout layout = new GlyphLayout();
         sb.begin();
         layout.setText(font, message);

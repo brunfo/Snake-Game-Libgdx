@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import pt.bisonte.snake.Game;
-import pt.bisonte.snake.managers.FontManager;
+import pt.bisonte.snake.managers.Font;
 import pt.bisonte.snake.managers.GameFileManager;
 import pt.bisonte.snake.managers.GameStateManager;
 import pt.bisonte.snake.managers.Jukebox;
@@ -36,10 +36,10 @@ public class MenuState extends GameState {
         shapeRenderer = new ShapeRenderer();
 
         // set font
-        titleFont = FontManager.setFont(36);
+        titleFont = Font.MANAGER.set(36);
         titleFont.setColor(Color.WHITE);
 
-        font = FontManager.setFont(20);
+        font = Font.MANAGER.set(20);
 
         menuItems = new String[]{"Play", "Highscores", "Options", "Quit"};
 
@@ -58,7 +58,7 @@ public class MenuState extends GameState {
         spriteBatch.setProjectionMatrix(Game.camera.combined);
         shapeRenderer.setProjectionMatrix(Game.camera.combined);
 
-        FontManager.centered(spriteBatch, titleFont, title, Game.WIDTH / 2, Game.HEIGHT - 50);
+        Font.MANAGER.centered(spriteBatch, titleFont, title, Game.WIDTH / 2, Game.HEIGHT - 50);
 
         float row = Game.HEIGHT - 150;
 
@@ -69,7 +69,7 @@ public class MenuState extends GameState {
                 font.setColor(Color.RED);
             else
                 font.setColor(Color.WHITE);
-            FontManager.centered(spriteBatch, font, menuItems[i], Game.WIDTH / 2, row);
+            Font.MANAGER.centered(spriteBatch, font, menuItems[i], Game.WIDTH / 2, row);
         }
 
     }

@@ -1,42 +1,38 @@
 package pt.bisonte.snake.level;
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
 import pt.bisonte.snake.entities.Player;
 import pt.bisonte.snake.entities.Wall;
 import pt.bisonte.snake.managers.GameStateManager;
-
 import java.io.*;
 import java.util.List;
 
-/**
- * Singleton LevelManager Manager.
- */
+
 public class LevelManager {
 
     private static boolean drawLevel=false;
 
     private static LevelData level;
 
-    public static void getNextLevel() {
+    public static void getNext() {
 
         //alter drawLevel to test new or replaced level.
         if(drawLevel)
-            saveLevel();
+            save();
 
         String filename;
         if (level == null)
             filename = "levels/level1.dat";
         else
-            filename="levels/level" + (getLevelID()+1) + ".dat";
+            filename="levels/level" + (getID()+1) + ".dat";
         load(filename);
     }
 
     /**
      * Used to save level details.
      */
-    private static void saveLevel(){
+    private static void save(){
         level= new LevelData();
         level.save();
         save(level);
@@ -54,8 +50,8 @@ public class LevelManager {
         return level.getGridCell();
     }
 
-    public static int getLevelID() {
-        return level.getLevelID();
+    public static int getID() {
+        return level.getID();
     }
 
     public static int getFruitToNextLevel() {
@@ -79,7 +75,7 @@ public class LevelManager {
             json.setElementType(LevelData.class, "walls", Wall.class);
 
             //preparing file and outputstream
-            FileOutputStream fileOut= new FileOutputStream("levels/level" + getLevelID() + ".dat");
+            FileOutputStream fileOut= new FileOutputStream("levels/level" + getID() + ".dat");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
 
             //writing
@@ -103,7 +99,7 @@ public class LevelManager {
         try {
             if (!saveFileExists(filename)) {
                // if (level==null)
-                    saveLevel();
+                    save();
                 return;
             }
             //preparing json

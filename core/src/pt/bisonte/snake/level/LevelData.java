@@ -1,11 +1,12 @@
 package pt.bisonte.snake.level;
 
 import pt.bisonte.snake.Game;
-import static pt.bisonte.snake.entities.Player.Facing;
 import pt.bisonte.snake.entities.Wall;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static pt.bisonte.snake.entities.Player.Facing;
 
 /**
  * This class serves to load data files of level games, draw new level or replace existing ones.
@@ -48,8 +49,8 @@ class LevelData {
         fruitToNextLevel = 20;
 
         startX = 5;
-        startY =5;
-        facing=Facing.UP;
+        startY = 5;
+        facing = Facing.UP;
 
         init();
 
@@ -67,8 +68,8 @@ class LevelData {
         fruitToNextLevel = 40;
 
         startX = 5;
-        startY =5;
-        facing=Facing.UP;
+        startY = 5;
+        facing = Facing.UP;
 
         init();
 
@@ -91,8 +92,8 @@ class LevelData {
         fruitToNextLevel = 60;
 
         startX = 3;
-        startY =5;
-        facing=Facing.UP;
+        startY = 5;
+        facing = Facing.UP;
 
         init();
 
@@ -117,8 +118,8 @@ class LevelData {
         levelID = 4;
         fruitToNextLevel = 80;
         startX = 3;
-        startY =13;
-        facing=Facing.UP;
+        startY = 13;
+        facing = Facing.UP;
 
         init();
 
@@ -136,8 +137,8 @@ class LevelData {
         levelID = 5;
         fruitToNextLevel = 100;
         startX = 10;
-        startY =10;
-        facing=Facing.UP;
+        startY = 10;
+        facing = Facing.UP;
         init();
 
         line(0, 0, 0, 6);
@@ -160,8 +161,8 @@ class LevelData {
         levelID = 6;
         fruitToNextLevel = 120;
         startX = 10;
-        startY =8;
-        facing=Facing.UP;
+        startY = 8;
+        facing = Facing.UP;
         init();
 
         line(0, 0, 0, 6);
@@ -185,7 +186,6 @@ class LevelData {
         line(7, 1, 7, 2);
 
 
-
     }
 
     private void level7() {
@@ -195,8 +195,8 @@ class LevelData {
         levelID = 7;
         fruitToNextLevel = 140;
         startX = 15;
-        startY =5;
-        facing=Facing.DOWN;
+        startY = 5;
+        facing = Facing.DOWN;
         init();
 
         line(0, 10, 19, 10);
@@ -211,8 +211,8 @@ class LevelData {
         levelID = 8;
         fruitToNextLevel = 160;
         startX = 10;
-        startY =15;
-        facing=Facing.RIGHT;
+        startY = 15;
+        facing = Facing.RIGHT;
         init();
 
         line(0, 10, 19, 10);
@@ -227,14 +227,14 @@ class LevelData {
         levelID = 9;
         fruitToNextLevel = 180;
         startX = 15;
-        startY =15;
-        facing=Facing.RIGHT;
+        startY = 15;
+        facing = Facing.RIGHT;
         init();
 
         line(0, 10, 19, 10);
         line(6, 0, 6, 9);
         line(13, 0, 13, 9);
-        line(10,11,10,19);
+        line(10, 11, 10, 19);
     }
 
     private void level10() {
@@ -244,8 +244,8 @@ class LevelData {
         levelID = 10;
         fruitToNextLevel = 200;
         startX = 10;
-        startY =9;
-        facing=Facing.LEFT;
+        startY = 9;
+        facing = Facing.LEFT;
         init();
 
         line(0, 6, 19, 6);
@@ -316,7 +316,7 @@ class LevelData {
         return gridCell;
     }
 
-    int getLevelID() {
+    int getID() {
         return levelID;
     }
 

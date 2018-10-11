@@ -13,7 +13,7 @@ import pt.bisonte.snake.entities.Player;
 import pt.bisonte.snake.entities.Tail;
 import pt.bisonte.snake.entities.Wall;
 import pt.bisonte.snake.level.LevelManager;
-import pt.bisonte.snake.managers.FontManager;
+import pt.bisonte.snake.managers.Font;
 import pt.bisonte.snake.managers.GameFileManager;
 import pt.bisonte.snake.managers.GameStateManager;
 import pt.bisonte.snake.managers.Jukebox;
@@ -244,7 +244,7 @@ public class PlayState extends GameState {
             if (player.eat(apple.contains(player.getX(), player.getY()), apple.getScore())) {
                 if (player.fruitsAte() >= LevelManager.getFruitToNextLevel()) {
                     // if isn't bonus apple, decreases 10% time to update, increasing speed.
-                    LevelManager.getNextLevel();
+                    LevelManager.getNext();
                     playTime = !playTime; //pause the game
                     resetBody();
                     moveTime = 0.25f; // reset speed
@@ -279,7 +279,7 @@ public class PlayState extends GameState {
         tempGameWidth = Game.WIDTH;
         tempGameHeight = Game.HEIGHT;
         LevelManager.reset();
-        LevelManager.getNextLevel();
+        LevelManager.getNext();
     }
 
 
@@ -309,21 +309,21 @@ public class PlayState extends GameState {
             pWall.draw(sr);
         }
 
-        titleFont = FontManager.setFont(30, new Color(0, 1, 1, 1));
-        font = FontManager.setFont(15);
+        titleFont = Font.MANAGER.set(30, new Color(0, 1, 1, 1));
+        font = Font.MANAGER.set(15);
 
-        FontManager.centered(sb, titleFont,
+        Font.MANAGER.centered(sb, titleFont,
                 MenuState.title,
                 Game.WIDTH / 2,
                 Game.HEIGHT + 80);
 
-        FontManager.left(sb, font,
+        Font.MANAGER.left(sb, font,
                 "Score: " + (int) player.getScore(),
                 0,
                 Game.HEIGHT + 20);
 
-        FontManager.right(sb, font,
-                "Level: " + LevelManager.getLevelID(),
+        Font.MANAGER.right(sb, font,
+                "Level: " + LevelManager.getID(),
                 Game.WIDTH,
                 -12);
 
@@ -341,24 +341,24 @@ public class PlayState extends GameState {
             apple.draw(sr);
 
         if (!playTime && !exitMessage) {
-            FontManager.centered(sb, font,
+            Font.MANAGER.centered(sb, font,
                     "Hit space to continue ...",
                     Game.WIDTH / 2,
                     Game.HEIGHT / 2);
         }
 
         if (exitMessage) {
-            FontManager.centered(sb, font,
+            Font.MANAGER.centered(sb, font,
                     "Are you sure you want",
                     Game.WIDTH / 2,
                     Game.HEIGHT / 2 + 20);
 
-            FontManager.centered(sb, font,
+            Font.MANAGER.centered(sb, font,
                     "to quit the game?",
                     Game.WIDTH / 2,
                     Game.HEIGHT / 2);
 
-            FontManager.centered(sb, font,
+            Font.MANAGER.centered(sb, font,
                     "(Y to exit)",
                     Game.WIDTH / 2,
                     Game.HEIGHT / 2 - 20);
@@ -366,7 +366,7 @@ public class PlayState extends GameState {
 
         remaningApples.draw(sr);
 
-        FontManager.left(sb, font,
+        Font.MANAGER.left(sb, font,
                 "x " + (LevelManager.getFruitToNextLevel() - player.fruitsAte()),
                 22,
                 -12);

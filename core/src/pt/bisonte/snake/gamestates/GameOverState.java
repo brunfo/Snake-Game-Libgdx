@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import pt.bisonte.snake.Game;
-import pt.bisonte.snake.managers.FontManager;
+import pt.bisonte.snake.managers.Font;
 import pt.bisonte.snake.managers.GameFileManager;
 import pt.bisonte.snake.managers.GameStateManager;
 
@@ -41,8 +41,8 @@ public class GameOverState extends GameState {
             newName = new char[]{'A', 'A', 'A'};
             currentChar = 0;
         }
-        gameOverFont = FontManager.setFont(32);
-        font = FontManager.setFont(20);
+        gameOverFont = Font.MANAGER.set(32);
+        font = Font.MANAGER.set(20);
 
     }
 
@@ -56,14 +56,14 @@ public class GameOverState extends GameState {
     public void draw() {
         spriteBatch.setProjectionMatrix(Game.camera.combined);
 
-        FontManager.centered(spriteBatch, gameOverFont, "Game Over", Game.WIDTH / 2, 300);
+        Font.MANAGER.centered(spriteBatch, gameOverFont, "Game Over", Game.WIDTH / 2, 300);
 
         if (!newHighScore) {
             return;
         }
 
         String str = "New High Score: " + GameFileManager.gameData.getTentativeScore();
-        FontManager.centered(spriteBatch, font, str, Game.WIDTH / 2, 200);
+        Font.MANAGER.centered(spriteBatch, font, str, Game.WIDTH / 2, 200);
 
         GlyphLayout layout = new GlyphLayout();
         layout.setText(font, "AAA");
