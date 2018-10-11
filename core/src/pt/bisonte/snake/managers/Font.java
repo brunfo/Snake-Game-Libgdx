@@ -33,7 +33,7 @@ public enum Font {
      */
     public BitmapFont set(int size) {
 
-        return set(size, new Color(1, 1, 1, 1));
+        return set(size, Color.WHITE);
     }
 
     /**

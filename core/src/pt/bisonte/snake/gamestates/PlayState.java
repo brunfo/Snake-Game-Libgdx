@@ -159,20 +159,11 @@ public class PlayState extends GameState {
             checkCollision();
 
             //update body position
-            if (body.size() != 0) {
-                //if player has eat a apple add a body part
-                if (player.hasEat())
-                    body.add(new Tail(0, 0));
-                //sets new position of body parts
-                for (int i = body.size() - 1; i >= 0; i--) {
-                    if (i == 0)
-                        body.get(i).setPosition(player.getX(), player.getY());
-                    else
-                        body.get(i).setPosition(body.get(i - 1).getX(), body.get(i - 1).getY());
-                }
-            }
+            updateBodyPosition();
+
             //update player
             player.update(dt);
+
             player.wrap();
 
             if (beat1)
@@ -181,51 +172,83 @@ public class PlayState extends GameState {
                 Jukebox.MANAGER.play("slide2", 0.10f);
             beat1 = !beat1;
 
-
-            if (player.isDead())
-                if (player.getLives() < 0) {
-                    GameFile.MANAGER.gameData.setTentativeScore((long) player.getScore());
-                    gameStateManager.setState(GameStateManager.State.GAMEOVER);
-                } else {
-                    resetBody();
-                    playTime = !playTime;
-                }
-
-
+            updatesLives();
         }
+
         //create apple
         if (apple == null) {
-            float x;
-            float y;
-            boolean containsHead, containsFruit = false, containsWall = false;
-            do {
-                // first get the position random
-                x = MathUtils.random(LevelManager.getColumns() - 1) * LevelManager.getGrid();
-                y = MathUtils.random(LevelManager.getRows() - 1) * LevelManager.getGrid();
-
-                // check if space is free
-                containsHead = player.contains(x, y);
-
-                for (Tail bodyPart : body) {
-                    containsFruit = bodyPart.contains(x, y);
-                    if (containsFruit)
-                        break; //if contains exit for loop
-                }
-
-                for (Wall pWall : LevelManager.getWalls()) {
-                    containsWall = pWall.contains(x, y);
-                    if (containsWall)
-                        break;
-                }
-
-            } while (containsHead || containsFruit || containsWall);
-
-            apple = new Apple(x, y);
+            apple = newApple();
         } else {
             apple.update(dt);
             if (apple.shouldRemove())
                 apple = null;
         }
+    }
+
+    /**
+     * Update player's lives.
+     */
+    private void updatesLives() {
+        if (player.isDead()) {
+            if (player.getLives() < 0) {
+                GameFile.MANAGER.gameData.setTentativeScore((long) player.getScore());
+                gameStateManager.setState(GameStateManager.State.GAMEOVER);
+            } else {
+                resetBody();
+                playTime = !playTime;
+            }
+        }
+    }
+
+    /**
+     * Updates tail parts position.
+     */
+    private void updateBodyPosition() {
+        if (body.size() != 0) {
+            //if player has eat a apple add a body part
+            if (player.hasEat())
+                body.add(new Tail(0, 0));
+            //sets new position of body parts
+            for (int i = body.size() - 1; i >= 0; i--) {
+                if (i == 0)
+                    body.get(i).setPosition(player.getX(), player.getY());
+                else
+                    body.get(i).setPosition(body.get(i - 1).getX(), body.get(i - 1).getY());
+            }
+        }
+    }
+
+    /**
+     * Creates a new Apple. Check if space is free to create.
+     *
+     * @return new Apple
+     */
+    private Apple newApple() {
+        float x;
+        float y;
+        boolean containsHead, containsFruit = false, containsWall = false;
+        do {
+            // first get the position random
+            x = MathUtils.random(LevelManager.getColumns() - 1) * LevelManager.getGrid();
+            y = MathUtils.random(LevelManager.getRows() - 1) * LevelManager.getGrid();
+
+            // check if space is free
+            containsHead = player.contains(x, y);
+
+            for (Tail bodyPart : body) {
+                containsFruit = bodyPart.contains(x, y);
+                if (containsFruit)
+                    break; //if contains exit for loop
+            }
+
+            for (Wall pWall : LevelManager.getWalls()) {
+                containsWall = pWall.contains(x, y);
+                if (containsWall)
+                    break;
+            }
+        } while (containsHead || containsFruit || containsWall);
+
+        return new Apple(x, y);
     }
 
     /**
@@ -306,18 +329,38 @@ public class PlayState extends GameState {
 
     @Override
     public void draw() {
-
-        drawGrid();
-
         sr.setProjectionMatrix(Game.camera.combined);
         sb.setProjectionMatrix(Game.camera.combined);
 
+        drawGrid();
 
         for (Wall pWall : LevelManager.getWalls()) {
             pWall.draw(sr);
         }
 
+        drawText();
 
+        for (Player extraLive : extraLives) {
+            extraLive.draw(sr);
+        }
+
+        player.draw(sr);
+
+        //draw body
+        for (Tail bodyPart : body) {
+            bodyPart.draw(sr);
+        }
+
+        if (apple != null)
+            apple.draw(sr);
+
+        remaningApples.draw(sr);
+    }
+
+    /**
+     * Draws text information
+     */
+    private void drawText() {
         Font.MANAGER.centered(sb, titleFont,
                 MenuState.title,
                 Game.WIDTH / 2,
@@ -332,19 +375,6 @@ public class PlayState extends GameState {
                 "Level: " + LevelManager.getID(),
                 Game.WIDTH,
                 -12);
-
-        for (Player extraLive : extraLives) {
-            extraLive.draw(sr);
-        }
-
-        player.draw(sr);
-
-        //draw body
-        for (Tail bodyPart : body) {
-            bodyPart.draw(sr);
-        }
-        if (apple != null)
-            apple.draw(sr);
 
         if (!playTime && !exitMessage) {
             Font.MANAGER.centered(sb, font,
@@ -369,14 +399,10 @@ public class PlayState extends GameState {
                     Game.WIDTH / 2,
                     Game.HEIGHT / 2 - 20);
         }
-
-        remaningApples.draw(sr);
-
         Font.MANAGER.left(sb, font,
                 "x " + (LevelManager.getFruitToNextLevel() - player.fruitsAte()),
                 22,
                 -12);
-
     }
 
 

@@ -73,6 +73,9 @@ public class GameStateManager {
     public void setState(State state) {
         if (gameState != null) {
             gameState.dispose();
+            gameState = null;
+            System.gc();
+
         }
 
         switch (state) {
