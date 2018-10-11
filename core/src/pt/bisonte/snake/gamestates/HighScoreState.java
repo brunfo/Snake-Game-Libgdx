@@ -51,7 +51,7 @@ public class HighScoreState extends GameState {
     @Override
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Keys.ENTER) || Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-            Jukebox.play("accept");
+            Jukebox.MANAGER.play("accept");
             gameStateManager.setState(GameStateManager.State.MENU);
         }
     }

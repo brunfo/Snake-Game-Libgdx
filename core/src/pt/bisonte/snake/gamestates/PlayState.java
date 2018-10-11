@@ -170,9 +170,9 @@ public class PlayState extends GameState {
             player.wrap();
 
             if (beat1)
-                Jukebox.play("slide1", 0.1f);
+                Jukebox.MANAGER.play("slide1", 0.1f);
             else
-                Jukebox.play("slide2", 0.10f);
+                Jukebox.MANAGER.play("slide2", 0.10f);
             beat1 = !beat1;
 
 
@@ -248,7 +248,7 @@ public class PlayState extends GameState {
                     playTime = !playTime; //pause the game
                     resetBody();
                     moveTime = 0.25f; // reset speed
-                    Jukebox.play("levelup");
+                    Jukebox.MANAGER.play("levelup");
                 }
                 //if fruits is bonus, then the update time increases 10%, decreasing speed.
                 if (apple.isBonus() && getPlayMode() == PlayMode.LEVEL_UP) {
@@ -258,7 +258,7 @@ public class PlayState extends GameState {
                 else if (player.fruitsAte() % 5 == 0 && getPlayMode() == PlayMode.LEVEL_UP) {
                     moveTime += moveTime * -0.10f;
                 }
-                Jukebox.play(apple.isBonus() ? "bonus" : "hiss");
+                Jukebox.MANAGER.play(apple.isBonus() ? "bonus" : "hiss");
             }
 
             if (apple.shouldRemove() || player.isDead())

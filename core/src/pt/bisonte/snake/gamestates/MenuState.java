@@ -78,16 +78,16 @@ public class MenuState extends GameState {
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && currentItem > 0) {
             currentItem--;
-            Jukebox.play("select");
+            Jukebox.MANAGER.play("select");
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && currentItem < menuItems.length - 1) {
             currentItem++;
-            Jukebox.play("select");
+            Jukebox.MANAGER.play("select");
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             select();
-            Jukebox.play("accept");
+            Jukebox.MANAGER.play("accept");
         }
     }
 

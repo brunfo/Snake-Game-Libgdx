@@ -82,23 +82,23 @@ public class OptionsState extends GameState {
     public void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP) && currentItem > 0) {
             currentItem--;
-            Jukebox.play("select");
+            Jukebox.MANAGER.play("select");
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && currentItem < menuItems.length - 1) {
             currentItem++;
-            Jukebox.play("select");
+            Jukebox.MANAGER.play("select");
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             select();
-            Jukebox.play("accept");
+            Jukebox.MANAGER.play("accept");
         }
 
         if ( Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             //revert newGame
             GameStateManager.startNewGame();
 
-            Jukebox.play("accept");
+            Jukebox.MANAGER.play("accept");
             gameStateManager.setState(GameStateManager.State.MENU);
         }
     }
@@ -126,7 +126,7 @@ public class OptionsState extends GameState {
                     GameStateManager.setPlayMode(GameStateManager.PlayMode.INFINITE_TAIL);
                     break;
             }
-            Jukebox.play("accept");
+            Jukebox.MANAGER.play("accept");
             GameStateManager.startNewGame();
             gameStateManager.setState(GameStateManager.State.PLAY);
         }
@@ -139,7 +139,7 @@ public class OptionsState extends GameState {
                     gameStateManager.setOptionsKeys(GameStateManager.OptionKeys.SNAKE);
                     break;
             }
-            Jukebox.play("accept");
+            Jukebox.MANAGER.play("accept");
             gameStateManager.setState(GameStateManager.State.MENU);
         }
 
