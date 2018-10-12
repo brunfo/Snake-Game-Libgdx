@@ -1,14 +1,15 @@
 package pt.bisonte.snake.entities;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Apple extends GameObject {
 
     private float removeTimer;
-    private float removeTime;
+    private final float removeTime;
     private boolean remove;
-    private int score;
+    private final int score;
     private boolean bonusApple; //this fruit decrease speed of the game by 10%
 
 
@@ -25,9 +26,9 @@ public class Apple extends GameObject {
         score = bonusApple ? 100 : 10;
     }
 
-    public Apple(float x, float y, boolean bonus){
-        this(x,y);
-        this.bonusApple= bonus;
+    public Apple(float x, float y, boolean bonus) {
+        this(x, y);
+        this.bonusApple = bonus;
     }
 
     /**
@@ -83,16 +84,11 @@ public class Apple extends GameObject {
             removeTimer = 0;
             remove = true;
         }
-
     }
 
     @Override
     public void draw(ShapeRenderer sr) {
-
-        sr.setColor(1, 0, 0, 1);
-        if (bonusApple)
-            sr.setColor(255,255,0, 0);
-
+        sr.setColor(bonusApple ? Color.YELLOW : Color.RED);
         sr.begin(ShapeRenderer.ShapeType.Filled);
         sr.ellipse(x + width / 4, y, width / 2, height * 4 / 6);
         sr.ellipse(x + 2f * (width / 4), y, width / 2, height * 4 / 6);
@@ -100,7 +96,5 @@ public class Apple extends GameObject {
         sr.ellipse(x + width / 6, y + height / 2, width / 2, height * 2 / 6);
         sr.setColor(1, 1, 1, 1);
         sr.end();
-
-
     }
 }

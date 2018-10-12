@@ -58,9 +58,7 @@ public class GameOverState extends GameState {
 
         Font.MANAGER.centered(batch, gameOverFont, "Game Over", Game.WIDTH / 2, 300);
 
-        if (!newHighScore) {
-            return;
-        }
+        if (!newHighScore) return;
 
         String str = "New High Score: " + GameFile.MANAGER.gameData.getTentativeScore();
         Font.MANAGER.centered(batch, font, str, Game.WIDTH / 2, 200);

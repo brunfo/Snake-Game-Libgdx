@@ -41,7 +41,7 @@ public class Player extends GameObject {
     /**
      * Reset previous orientation
      */
-    public void reset() {
+    private void reset() {
         //initial orientation
         radians = (float) Math.PI / 2;
         facing = Facing.UP;

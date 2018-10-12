@@ -3,14 +3,14 @@ package pt.bisonte.snake.gamestates;
 import pt.bisonte.snake.managers.GameStateManager;
 
 public abstract class GameState {
-    GameStateManager gameStateManager;
+    final GameStateManager gameStateManager;
 
     GameState(GameStateManager gameStateManager) {
         this.gameStateManager = gameStateManager;
         init();
     }
 
-    public abstract void init();
+    protected abstract void init();
 
     public abstract void update(float dt);
 

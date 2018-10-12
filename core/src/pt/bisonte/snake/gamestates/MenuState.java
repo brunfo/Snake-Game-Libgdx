@@ -65,10 +65,8 @@ public class MenuState extends GameState {
         for (int i = 0; i < menuItems.length; i++) {
             row -= 30;
 
-            if (currentItem == i)
-                font.setColor(Color.RED);
-            else
-                font.setColor(Color.WHITE);
+            font.setColor(currentItem == i ? Color.RED : Color.WHITE);
+
             Font.MANAGER.centered(batch, font, menuItems[i], Game.WIDTH / 2, row);
         }
 

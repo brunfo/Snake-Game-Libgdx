@@ -19,11 +19,11 @@ public enum Font {
 
     MANAGER;
 
-    FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+    final FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
     // set font
-    private FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(
+    private final FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(
             Gdx.files.internal("fonts/Hyperspace Bold.ttf"));
-    private GlyphLayout layout = new GlyphLayout();
+    private final GlyphLayout layout = new GlyphLayout();
 
     /**
      * Formats a font.

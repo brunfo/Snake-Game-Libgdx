@@ -12,7 +12,7 @@ public class GameData implements Serializable {
 
     private final int MAX_SCORES = 10;
 
-    private PlayerScore[] highScores;
+    private final PlayerScore[] highScores;
 
     private long tentativeScore;
 

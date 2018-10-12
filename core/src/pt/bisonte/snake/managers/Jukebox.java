@@ -12,7 +12,7 @@ import java.util.Map;
 public enum Jukebox {
     MANAGER;
 
-    private Map<String, Sound> sounds;
+    private final Map<String, Sound> sounds;
 
     {
         sounds = new HashMap<>();

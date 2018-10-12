@@ -5,19 +5,19 @@ import com.badlogic.gdx.utils.Json;
 import pt.bisonte.snake.entities.Player;
 import pt.bisonte.snake.entities.Wall;
 import pt.bisonte.snake.managers.GameStateManager;
+
 import java.io.*;
 import java.util.List;
 
 
 public class LevelManager {
 
-    private static boolean drawLevel=false;
-
     private static LevelData level;
 
     public static void getNext() {
 
         //alter drawLevel to test new or replaced level.
+        boolean drawLevel = false;
         if(drawLevel)
             save();
 

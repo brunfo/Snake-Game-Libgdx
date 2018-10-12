@@ -268,9 +268,8 @@ class LevelData {
      * @param y1 - Coordinate
      * @param x2 - Coordinate
      * @param y2 - Coordinate
-     * @return true or false
      */
-    private boolean line(int x1, int y1, int x2, int y2) {
+    private void line(int x1, int y1, int x2, int y2) {
 
         int dx = x1 - x2;
         int dy = y1 - y2;
@@ -278,7 +277,7 @@ class LevelData {
         float distance = (float) Math.sqrt(dx * dx + dy * dy);
         //the distance between the two points must be different then zero, and dx or dy must be zero.
         if (distance == 0 || dx != 0 && dy != 0)
-            return false;
+            return;
 
         for (int i = (dx == 0 ? y1 : x1);
              i <= (dx == 0 ? y2 : x2);
@@ -289,7 +288,6 @@ class LevelData {
                     gridCell));
         }
 
-        return true;
     }
 
     /**

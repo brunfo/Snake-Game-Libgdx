@@ -22,8 +22,6 @@ public class OptionsState extends GameState {
     private BitmapFont info;
 
     private int currentItem;
-    private String[] keysMenuItems;
-    private String[] playMenuItems;
     private String[] menuItems;
 
     public OptionsState(GameStateManager gameStateManager) {
@@ -43,8 +41,8 @@ public class OptionsState extends GameState {
         font = Font.MANAGER.set(20);
         info = Font.MANAGER.set(15);
 
-        keysMenuItems = new String[]{"Player", "Snake"};
-        playMenuItems = new String[]{"Level UP", "Infinite Tail"};
+        String[] keysMenuItems = new String[]{"Player", "Snake"};
+        String[] playMenuItems = new String[]{"Level UP", "Infinite Tail"};
 
         if (GameStateManager.isNewGame())
             menuItems = playMenuItems;

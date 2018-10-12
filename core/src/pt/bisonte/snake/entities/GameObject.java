@@ -34,12 +34,10 @@ public abstract class GameObject {
      *
      * @param x - WIDTH coordinate
      * @param y - eight coordinate
-     * @return - Returns this Game Object, allowing to chain methods.
      */
-    public GameObject setPosition(float x, float y) {
+    public void setPosition(float x, float y) {
         this.x = x;
         this.y = y;
-        return this;
     }
 
     /**

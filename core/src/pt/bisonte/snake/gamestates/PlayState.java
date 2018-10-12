@@ -53,8 +53,6 @@ public class PlayState extends GameState {
 
     private boolean beat1;
 
-    private Color color;
-
     public PlayState(GameStateManager gameStateManager) {
         super(gameStateManager);
     }
@@ -66,7 +64,7 @@ public class PlayState extends GameState {
         titleFont = gameStateManager.titleFont;
 
         //removed from draw, causes a huge consumption of memory in there
-        color = new Color(0, 1, 1, 1);
+        Color color = new Color(0, 1, 1, 1);
         titleFont = Font.MANAGER.set(30, color);
         font = Font.MANAGER.set(15);
 
@@ -237,8 +235,9 @@ public class PlayState extends GameState {
 
             for (Tail bodyPart : body) {
                 containsFruit = bodyPart.contains(x, y);
-                if (containsFruit)
+                if (containsFruit) {
                     break; //if contains exit for loop
+                }
             }
 
             for (Wall pWall : LevelManager.getWalls()) {
@@ -257,8 +256,9 @@ public class PlayState extends GameState {
     private void checkCollision() {
         //player to tail
         for (Tail bodyPart : body) {
-            if (bodyPart.contains(player.getX(), player.getY()))
+            if (bodyPart.contains(player.getX(), player.getY())) {
                 player.hit();
+            }
         }
 
         //player to walls
@@ -334,25 +334,20 @@ public class PlayState extends GameState {
 
         drawGrid();
 
-        for (Wall pWall : LevelManager.getWalls()) {
-            pWall.draw(sr);
-        }
+        LevelManager.getWalls().forEach(pWall -> pWall.draw(sr));
 
         drawText();
 
-        for (Player extraLive : extraLives) {
-            extraLive.draw(sr);
-        }
+        extraLives.forEach(extraLive -> extraLive.draw(sr));
 
         player.draw(sr);
 
         //draw body
-        for (Tail bodyPart : body) {
-            bodyPart.draw(sr);
-        }
+        body.forEach(bodyPart -> bodyPart.draw(sr));
 
-        if (apple != null)
+        if (apple != null) {
             apple.draw(sr);
+        }
 
         remaningApples.draw(sr);
     }
@@ -414,12 +409,15 @@ public class PlayState extends GameState {
 
         sr.setColor(0, 0, 0.35f, 1);
         sr.begin(ShapeRenderer.ShapeType.Line);
+
         for (int i = 0; i <= Game.WIDTH; i += LevelManager.getGrid()) {
             sr.line(i, 0, i, Game.HEIGHT);
         }
+
         for (int i = 0; i <= Game.HEIGHT; i += LevelManager.getGrid()) {
             sr.line(0, i, Game.WIDTH, i);
         }
+
         sr.end();
     }
 
