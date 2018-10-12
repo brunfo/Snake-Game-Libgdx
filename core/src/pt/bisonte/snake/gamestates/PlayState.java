@@ -255,18 +255,26 @@ public class PlayState extends GameState {
      */
     private void checkCollision() {
         //player to tail
-        for (Tail bodyPart : body) {
-            if (bodyPart.contains(player.getX(), player.getY())) {
-                player.hit();
-            }
-        }
+//        for (Tail bodyPart : body) {
+//            if (bodyPart.contains(player.getX(), player.getY())) {
+//                player.hit();
+//            }
+//        }
+        //not a fan here width this lambda, same has above.
+        body.stream().filter(
+                bodyPart -> bodyPart.contains(player.getX(), player.getY())
+        ).forEach(bodyPart -> player.hit());
 
         //player to walls
-        for (Wall pWall : LevelManager.getWalls()) {
-            if (pWall.contains(player.getX(), player.getY())) {
-                player.hit();
-            }
-        }
+//        for (Wall pWall : LevelManager.getWalls()) {
+//            if (pWall.contains(player.getX(), player.getY())) {
+//                player.hit();
+//            }
+//        }
+        //not a fan here width this lambda, same has above.
+        LevelManager.getWalls().stream().filter(
+                pWall -> pWall.contains(player.getX(), player.getY())
+        ).forEach(pWall -> player.hit());
 
         //player to apple
         if (apple != null) {
@@ -438,10 +446,11 @@ public class PlayState extends GameState {
                     break;
             }
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             playTime = !playTime;
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && playTime) {
-            playTime = !playTime;
+            playTime = false;
             exitMessage = !exitMessage;
         }
         if (exitMessage && Gdx.input.isKeyJustPressed(Input.Keys.Y))
