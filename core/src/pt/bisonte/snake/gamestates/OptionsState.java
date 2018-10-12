@@ -67,10 +67,9 @@ public class OptionsState extends GameState {
         Font.MANAGER.centered(batch, titleFont, MenuState.title, Game.WIDTH / 2, Game.HEIGHT - 50);
 
         float row = Game.HEIGHT - 150;
-        String str;
+        String str = "Chose your preferred play input keys";
 
         if (!GameStateManager.isNewGame()) {
-            str = "Chose your preferred play input keys";
             Font.MANAGER.centered(batch, info, str, Game.WIDTH / 2, row);
             row -= 50;
         }
@@ -85,9 +84,11 @@ public class OptionsState extends GameState {
             Font.MANAGER.centered(batch, font, menuItems[i], Game.WIDTH / 2, row);
         }
 
+        str = currentItem == 0 ? "Left, Right, Up and Down keys" : "Left or Right keys to rotate imputed direction";
+
+        row -= 50;
+
         if (!GameStateManager.isNewGame()) {
-            str = currentItem == 0 ? "Left, Right, Up and Down keys" : "Left or Right keys to rotate imputed direction";
-            row -= 50;
             Font.MANAGER.centered(batch, info, str, Game.WIDTH / 2, row);
         }
     }
